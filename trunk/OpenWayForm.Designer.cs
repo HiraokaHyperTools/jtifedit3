@@ -53,14 +53,14 @@
             // 
             // bInsert
             // 
-            this.bInsert.DialogResult = System.Windows.Forms.DialogResult.Retry;
+            this.bInsert.DialogResult = System.Windows.Forms.DialogResult.Yes;
             this.bInsert.Image = global::jtifedit3.Properties.Resources.ExpandSpaceHS;
             this.bInsert.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.bInsert.Location = new System.Drawing.Point(52, 187);
             this.bInsert.Name = "bInsert";
             this.bInsert.Size = new System.Drawing.Size(253, 44);
             this.bInsert.TabIndex = 4;
-            this.bInsert.Text = "読み込んで、I マークの後に挿入します。";
+            this.bInsert.Text = "読み込んで、カーソルの後に挿入します。";
             this.bInsert.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.bInsert.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.bInsert.UseVisualStyleBackColor = true;
@@ -88,7 +88,7 @@
             this.bAppend.Name = "bAppend";
             this.bAppend.Size = new System.Drawing.Size(253, 44);
             this.bAppend.TabIndex = 3;
-            this.bAppend.Text = "読み込んで、追加します。";
+            this.bAppend.Text = "読み込んで、最後のページに追加します。";
             this.bAppend.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.bAppend.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.bAppend.UseVisualStyleBackColor = true;

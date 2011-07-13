@@ -11,5 +11,9 @@ namespace jtifedit3 {
         public AboutForm() {
             InitializeComponent();
         }
+
+        private void AboutForm_Load(object sender, EventArgs e) {
+            lVer.Text = Application.ProductVersion;
+        }
     }
 }

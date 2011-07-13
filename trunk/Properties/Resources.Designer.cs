@@ -129,5 +129,19 @@ namespace jtifedit3.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap TLeft {
+            get {
+                object obj = ResourceManager.GetObject("TLeft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap TRight {
+            get {
+                object obj = ResourceManager.GetObject("TRight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

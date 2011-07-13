@@ -30,6 +30,7 @@
             this.bClose = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.lVer = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -87,6 +88,15 @@
             this.label5.TabIndex = 5;
             this.label5.Text = "FreeImage .NET";
             // 
+            // lVer
+            // 
+            this.lVer.AutoSize = true;
+            this.lVer.Location = new System.Drawing.Point(111, 9);
+            this.lVer.Name = "lVer";
+            this.lVer.Size = new System.Drawing.Size(44, 12);
+            this.lVer.TabIndex = 6;
+            this.lVer.Text = "Version";
+            // 
             // AboutForm
             // 
             this.AcceptButton = this.bClose;
@@ -94,6 +104,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bClose;
             this.ClientSize = new System.Drawing.Size(284, 171);
+            this.Controls.Add(this.lVer);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.bClose);
@@ -107,6 +118,7 @@
             this.Name = "AboutForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "J TIFF Editor 3 について";
+            this.Load += new System.EventHandler(this.AboutForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,5 +132,6 @@
         private System.Windows.Forms.Button bClose;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lVer;
     }
 }
