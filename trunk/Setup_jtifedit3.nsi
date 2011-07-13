@@ -8,8 +8,8 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.0"
-!define APPVER "1_0_0"
+!define VER    "1.0.1"
+!define APPVER "1_0_1"
 
 !define MIME "image/tiff"
 
@@ -96,8 +96,8 @@ Section "${APP}" ;No components page, name is not important
   !insertmacro CheckDotNET ${DOTNET_VERSION}
 
   ; Put file there
-  File "bin\release\jtifedit3.exe"
-  File "bin\release\jtifedit3.pdb"
+  File "bin\x86\release\jtifedit3.exe"
+  File "bin\x86\release\jtifedit3.pdb"
   File ".\MAPISendMailSa.exe"
   File ".\FreeImage.dll"
   File ".\FreeImageNET.dll"
