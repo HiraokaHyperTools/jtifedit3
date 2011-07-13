@@ -93,6 +93,9 @@ namespace jtifedit3 {
 
             TTLTemp = this.Text;
 
+            tstop.Location = Point.Empty;
+            tsvis.Location = new Point(0, tstop.Height);
+
             if (fp != null) Openf(fp);
 
             tscRate.SelectedIndex = 0;
@@ -302,80 +305,91 @@ namespace jtifedit3 {
 
         private void tv_DragDrop(object sender, DragEventArgs e) {
             TvInsertMark iMark = tv.InsertMark;
-            tv.InsertMark = new TvInsertMark();
+            try {
+                int iAt = iMark.Item + ((0 != (iMark.Location & (TvInsertMarkLocation.Right | TvInsertMarkLocation.Bottom))) ? 1 : 0);
 
-            int iAt = iMark.Item + ((0 != (iMark.Location & (TvInsertMarkLocation.Right | TvInsertMarkLocation.Bottom))) ? 1 : 0);
+                bool isCopy = 0 != (e.Effect & DragDropEffects.Copy);
 
-            bool isCopy = 0 != (e.Effect & DragDropEffects.Copy);
+                String[] alfp = e.Data.GetData(DataFormats.FileDrop) as String[];
+                if (alfp != null) {
+                    DialogResult res;
+                    using (OpenWayForm form = new OpenWayForm(true))
+                        res = form.ShowDialog();
+                    if (res != DialogResult.Cancel) {
+                        bool fAppend = res == DialogResult.Retry;
+                        bool fInsertAfter = res == DialogResult.Yes;
 
-            String[] alfp = e.Data.GetData(DataFormats.FileDrop) as String[];
-            if (alfp != null) {
-                DialogResult res;
-                using (OpenWayForm form = new OpenWayForm(true))
-                    res = form.ShowDialog();
-                if (res != DialogResult.Cancel)
-                    foreach (String fp in alfp) {
-                        FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
-                        FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fp, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
-                        try {
-                            int cnt = FreeImage.GetPageCount(tif);
-                            for (int i = 0; i < cnt; i++) {
-                                FIBITMAP fib = FreeImage.LockPage(tif, i);
-                                try {
-                                    tv.Picts.Insert(iAt, new TvPict(FreeImage.Clone(fib)));
-                                    iAt++;
-                                }
-                                finally {
-                                    FreeImage.UnlockPage(tif, fib, false);
+                        if (!fInsertAfter) {
+                            iAt = tv.Picts.Count;
+                        }
+
+                        foreach (String fp in alfp) {
+                            FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
+                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fp, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+                            try {
+                                int cnt = FreeImage.GetPageCount(tif);
+                                for (int i = 0; i < cnt; i++) {
+                                    FIBITMAP fib = FreeImage.LockPage(tif, i);
+                                    try {
+                                        tv.Picts.Insert(iAt, new TvPict(FreeImage.Clone(fib)));
+                                        iAt++;
+                                    }
+                                    finally {
+                                        FreeImage.UnlockPage(tif, fib, false);
+                                    }
                                 }
                             }
-                        }
-                        finally {
-                            FreeImage.CloseMultiBitmapEx(ref tif);
+                            finally {
+                                FreeImage.CloseMultiBitmapEx(ref tif);
+                            }
                         }
                     }
-                return;
-            }
-            else {
-                int iPId = (int)e.Data.GetData("PId");
-                int iSelFirst = (int)e.Data.GetData("SelFirst");
-                int iSelLast = (int)e.Data.GetData("SelLast");
+                    return;
+                }
+                else {
+                    int iPId = (int)e.Data.GetData("PId");
+                    int iSelFirst = (int)e.Data.GetData("SelFirst");
+                    int iSelLast = (int)e.Data.GetData("SelLast");
 
-                int cnt = iSelLast - iSelFirst + 1;
+                    int cnt = iSelLast - iSelFirst + 1;
 
-                if (iPId == Process.GetCurrentProcess().Id) {
-                    List<TvPict> al = new List<TvPict>();
-                    for (int x = iSelFirst; x <= iSelLast; x++) al.Add(tv.Picts[x]);
+                    if (iPId == Process.GetCurrentProcess().Id) {
+                        List<TvPict> al = new List<TvPict>();
+                        for (int x = iSelFirst; x <= iSelLast; x++) al.Add(tv.Picts[x]);
 
-                    if (isCopy) {
-                        for (int x = 0; x < al.Count; x++) {
-                            tv.Picts.Insert(iAt + x, al[x].Clone());
+                        if (isCopy) {
+                            for (int x = 0; x < al.Count; x++) {
+                                tv.Picts.Insert(iAt + x, al[x].Clone());
+                            }
+                        }
+                        else {
+                            if (iSelFirst <= iAt && iAt <= iSelLast + 1) {
+
+                            }
+                            else {
+                                for (int x = iSelLast; x >= iSelFirst; x--) {
+                                    tv.Picts.RemoveAt(x);
+                                }
+                                if (iAt > iSelFirst)
+                                    iAt -= cnt;
+                                for (int x = 0; x < al.Count; x++) {
+                                    tv.Picts.Insert(iAt + x, al[x]);
+                                }
+                            }
                         }
                     }
                     else {
-                        if (iSelFirst <= iAt && iAt <= iSelLast + 1) {
-
+                        for (int x = 0; x < cnt; x++) {
+                            tv.Picts.Insert(iAt + x, new TvPict(CPUt.GetPic(e.Data, iSelFirst + x)));
                         }
-                        else {
-                            for (int x = iSelLast; x >= iSelFirst; x--) {
-                                tv.Picts.RemoveAt(x);
-                            }
-                            if (iAt > iSelFirst)
-                                iAt -= cnt;
-                            for (int x = 0; x < al.Count; x++) {
-                                tv.Picts.Insert(iAt + x, al[x]);
-                            }
+                        if (!isCopy) {
+                            e.Data.SetData("Pasted", (int)1);
                         }
                     }
                 }
-                else {
-                    for (int x = 0; x < cnt; x++) {
-                        tv.Picts.Insert(iAt + x, new TvPict(CPUt.GetPic(e.Data, iSelFirst + x)));
-                    }
-                    if (!isCopy) {
-                        e.Data.SetData("Pasted", (int)1);
-                    }
-                }
+            }
+            finally {
+                tv.InsertMark = new TvInsertMark();
             }
         }
 
@@ -482,6 +496,11 @@ namespace jtifedit3 {
         }
 
         private void bMail_Click(object sender, EventArgs e) {
+            if (tv.SelCount == 0) {
+                MessageBox.Show(this, "メール送信できるページが有りません。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             String fpTmp = Path.GetTempFileName() + ".tif";
 
             FIMULTIBITMAP tif = FreeImage.OpenMultiBitmap(FREE_IMAGE_FORMAT.FIF_TIFF, fpTmp, true, false, true, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
