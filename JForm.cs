@@ -47,6 +47,19 @@ namespace jtifedit3 {
             }
         }
 
+        TState TrySave2() {
+            if (!Modified) return TState.Yes;
+
+            switch (MessageBox.Show(this, "先に保存しますか。", Path.GetFileName(Currentfp), MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)) {
+                case DialogResult.Yes:
+                    Savef(Currentfp);
+                    return TState.Yes;
+                case DialogResult.No:
+                default:
+                    return TState.No;
+            }
+        }
+
         private void Newf() {
             switch (TrySave()) {
                 case TState.Yes:
@@ -610,5 +623,23 @@ namespace jtifedit3 {
             }
         }
 
+        private void bMailContents_Click(object sender, EventArgs e) {
+            switch (TrySave2()) {
+                case TState.Yes: {
+                        if (tv.SelCount == 0) {
+                            MessageBox.Show(this, "メール送信できるページが有りません。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        else {
+                            Process.Start(Path.Combine(Application.StartupPath, "MAPISendMailSa.exe"), " \"" + Currentfp + "\"");
+                        }
+                        break;
+                    }
+                default: {
+                        MessageBox.Show(this, "送信するには、先に保存してください。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        break;
+                    }
+            }
+        }
     }
 }
