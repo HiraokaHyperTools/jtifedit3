@@ -142,6 +142,8 @@
     <Compile Include="ThumbView.Designer.cs">
       <DependentUpon>ThumbView.cs</DependentUpon>
     </Compile>
+    <Compile Include="TIFCut.cs" />
+    <Compile Include="TIFx.cs" />
     <Compile Include="WIP.cs">
       <SubType>UserControl</SubType>
     </Compile>
