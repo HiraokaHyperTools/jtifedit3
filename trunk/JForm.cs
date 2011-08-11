@@ -130,8 +130,23 @@ namespace jtifedit3 {
         }
 
         void Openf(String fp) {
+            String fpOpen = fp;
+
+            TCUt tcut = new TCUt(fp);
+            if (tcut.Test() > 0) {
+                if (!tcut.ConfirmTagsDisposal(this, false))
+                    return;
+
+                fpOpen = Path.GetTempFileName();
+                File.Copy(fp, fpOpen, true);
+
+                using (FileStream fs = File.Open(fpOpen, FileMode.Open, FileAccess.ReadWrite, FileShare.Read)) {
+                    new TC.TIFCut().Cut(fs);
+                }
+            }
+
             FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_TIFF;
-            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fp, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
             try {
                 tv.Picts.Clear();
                 Currentfp = null;
@@ -441,7 +456,129 @@ namespace jtifedit3 {
             }
         }
 
+        class TCUt {
+            String fp;
+
+            public TCUt(String fp) {
+                this.fp = fp;
+            }
+
+            SortedDictionary<string, string> dict = new SortedDictionary<string, string>();
+
+            public int Test() {
+                if (!File.Exists(fp))
+                    return -1;
+                try {
+                    dict.Clear();
+                    using (FileStream fs = File.OpenRead(fp)) {
+                        jtifedit2.TIF.Reader reader = new jtifedit2.TIF.Reader(fs);
+                        jtifedit2.TIF.Entry[] al;
+                        while (null != (al = reader.Read())) {
+                            foreach (jtifedit2.TIF.Entry e in al) {
+                                // from http://www.awaresystems.be/imaging/tiff/tifftags/private.html
+                                switch (e.tag) {
+                                    case 0x8649: dict["Adobe Photoshop"] = null; break;
+                                    case 0x935C: dict["Adobe Photoshop"] = null; break;
+                                    case 0xC612: dict["DNG"] = null; break;
+                                    case 0xC613: dict["DNG"] = null; break;
+                                    case 0xC614: dict["DNG"] = null; break;
+                                    case 0xC615: dict["DNG"] = null; break;
+                                    case 0xC616: dict["DNG"] = null; break;
+                                    case 0xC617: dict["DNG"] = null; break;
+                                    case 0xC618: dict["DNG"] = null; break;
+                                    case 0xC619: dict["DNG"] = null; break;
+                                    case 0xC61A: dict["DNG"] = null; break;
+                                    case 0xC61B: dict["DNG"] = null; break;
+                                    case 0xC61C: dict["DNG"] = null; break;
+                                    case 0xC61D: dict["DNG"] = null; break;
+                                    case 0xC61E: dict["DNG"] = null; break;
+                                    case 0xC61F: dict["DNG"] = null; break;
+                                    case 0xC620: dict["DNG"] = null; break;
+                                    case 0xC621: dict["DNG"] = null; break;
+                                    case 0xC622: dict["DNG"] = null; break;
+                                    case 0xC623: dict["DNG"] = null; break;
+                                    case 0xC624: dict["DNG"] = null; break;
+                                    case 0xC625: dict["DNG"] = null; break;
+                                    case 0xC626: dict["DNG"] = null; break;
+                                    case 0xC627: dict["DNG"] = null; break;
+                                    case 0xC628: dict["DNG"] = null; break;
+                                    case 0xC629: dict["DNG"] = null; break;
+                                    case 0xC62A: dict["DNG"] = null; break;
+                                    case 0xC62B: dict["DNG"] = null; break;
+                                    case 0xC62C: dict["DNG"] = null; break;
+                                    case 0xC62D: dict["DNG"] = null; break;
+                                    case 0xC62E: dict["DNG"] = null; break;
+                                    case 0xC62F: dict["DNG"] = null; break;
+                                    case 0xC630: dict["DNG"] = null; break;
+                                    case 0xC631: dict["DNG"] = null; break;
+                                    case 0xC632: dict["DNG"] = null; break;
+                                    case 0xC634: dict["DNG"] = null; break;
+                                    case 0xC635: dict["DNG"] = null; break;
+                                    case 0xC65A: dict["DNG"] = null; break;
+                                    case 0xC65B: dict["DNG"] = null; break;
+                                    case 0xC65C: dict["DNG"] = null; break;
+                                    case 0xA480: dict["GDAL"] = null; break;
+                                    case 0xA481: dict["GDAL"] = null; break;
+                                    case 0x830E: dict["GeoTIFF"] = null; break;
+                                    case 0x8480: dict["GeoTIFF"] = null; break;
+                                    case 0x8482: dict["GeoTIFF"] = null; break;
+                                    case 0x85D8: dict["GeoTIFF"] = null; break;
+                                    case 0x87AF: dict["GeoTIFF"] = null; break;
+                                    case 0x87B0: dict["GeoTIFF"] = null; break;
+                                    case 0x87B1: dict["GeoTIFF"] = null; break;
+                                    case 0x885C: dict["HylaFAX"] = null; break;
+                                    case 0x885D: dict["HylaFAX"] = null; break;
+                                    case 0x885E: dict["HylaFAX"] = null; break;
+                                    case 0x80A4: dict["Imaging"] = null; break;
+                                    case 0x847E: dict["Intergraph Application"] = null; break;
+                                    case 0x847F: dict["Intergraph Application"] = null; break;
+                                    case 0x83BB: dict["IPTC"] = null; break;
+                                    case 0x82A5: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82A6: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82A7: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82A8: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82A9: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82AA: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82AB: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0x82AC: dict["Molecular Dynamics GEL"] = null; break;
+                                    case 0xC427: dict["Oce scanning"] = null; break;
+                                    case 0xC428: dict["Oce scanning"] = null; break;
+                                    case 0xC429: dict["Oce scanning"] = null; break;
+                                    case 0xC42A: dict["Oce scanning"] = null; break;
+                                    case 0xC660: dict["Sketchbook Pro"] = null; break;
+                                    case 0x8769: dict["Exif IFD"] = null; break;
+                                    case 0x8825: dict["GPS IFD"] = null; break;
+                                    case 0x8773: dict["ICC Profile"] = null; break;
+                                    case 0xA005: dict["Interoperability IFD"] = null; break;
+                                }
+                            }
+                        }
+                        return dict.Count;
+                    }
+                }
+                catch (Exception) {
+                    return -1;
+                }
+            }
+
+            public bool ConfirmTagsDisposal(IWin32Window parent, bool save) {
+                String s = "";
+                foreach (String kw in dict.Keys) s += "- " + kw + "\n";
+
+                if (dict.Count != 0) {
+                    if (MessageBox.Show(parent, (save ? "上書き保存しますと、他のソフトウェアで追加した情報を失う可能性が有ります。" : "続行しますと、他のソフトウェアで追加した情報を安全の為に削除致します。") + "情報：\n\n" + s + "\n" + "それでも、続行しますか。", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                        return false;
+                }
+                return true;
+            }
+        }
+
         private void bSave_Click(object sender, EventArgs e) {
+            if (Currentfp != null) {
+                TCUt tcut = new TCUt(Currentfp);
+                if (tcut.Test() > 0 && !tcut.ConfirmTagsDisposal(this, true))
+                    return;
+            }
             Savef(Currentfp);
         }
 
