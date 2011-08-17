@@ -29,7 +29,9 @@
             this.ss = new System.Windows.Forms.StatusStrip();
             this.tssl = new System.Windows.Forms.ToolStripStatusLabel();
             this.vsc = new System.Windows.Forms.SplitContainer();
+            this.tv = new jtifedit3.ThumbView();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pvw = new jtifedit3.PreViewer();
             this.tstop = new System.Windows.Forms.ToolStrip();
             this.bNew = new System.Windows.Forms.ToolStripButton();
             this.bOpenf = new System.Windows.Forms.ToolStripButton();
@@ -39,6 +41,8 @@
             this.bRotLeft = new System.Windows.Forms.ToolStripButton();
             this.bRotRight = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.bMail = new System.Windows.Forms.ToolStripSplitButton();
+            this.bMailContents = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.bDelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,10 +58,6 @@
             this.ofdPict = new System.Windows.Forms.OpenFileDialog();
             this.mThumb = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sfdPict = new System.Windows.Forms.SaveFileDialog();
-            this.bMail = new System.Windows.Forms.ToolStripSplitButton();
-            this.bMailContents = new System.Windows.Forms.ToolStripMenuItem();
-            this.tv = new jtifedit3.ThumbView();
-            this.pvw = new jtifedit3.PreViewer();
             this.tsc.BottomToolStripPanel.SuspendLayout();
             this.tsc.ContentPanel.SuspendLayout();
             this.tsc.TopToolStripPanel.SuspendLayout();
@@ -130,6 +130,28 @@
             this.vsc.SplitterWidth = 6;
             this.vsc.TabIndex = 0;
             // 
+            // tv
+            // 
+            this.tv.AllowDrop = true;
+            this.tv.AutoScroll = true;
+            this.tv.BackColor = System.Drawing.Color.Transparent;
+            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tv.Location = new System.Drawing.Point(0, 0);
+            this.tv.Name = "tv";
+            this.tv.Picts = null;
+            this.tv.Sel2 = -1;
+            this.tv.Size = new System.Drawing.Size(260, 438);
+            this.tv.SSel = -1;
+            this.tv.TabIndex = 2;
+            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
+            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
+            this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
+            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
+            this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
+            this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
+            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
+            this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.pvw);
@@ -139,6 +161,17 @@
             this.panel1.Size = new System.Drawing.Size(519, 438);
             this.panel1.TabIndex = 2;
             this.panel1.TabStop = true;
+            // 
+            // pvw
+            // 
+            this.pvw.AutoScroll = true;
+            this.pvw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pvw.Location = new System.Drawing.Point(0, 0);
+            this.pvw.Name = "pvw";
+            this.pvw.Pic = null;
+            this.pvw.Size = new System.Drawing.Size(519, 438);
+            this.pvw.TabIndex = 0;
+            this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
             // 
             // tstop
             // 
@@ -234,6 +267,25 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 35);
+            // 
+            // bMail
+            // 
+            this.bMail.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bMailContents});
+            this.bMail.Image = global::jtifedit3.Properties.Resources.NewMessageHS;
+            this.bMail.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bMail.Name = "bMail";
+            this.bMail.Size = new System.Drawing.Size(136, 32);
+            this.bMail.Text = "選択ページをメール送信";
+            this.bMail.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.bMail.ButtonClick += new System.EventHandler(this.bMail_Click);
+            // 
+            // bMailContents
+            // 
+            this.bMailContents.Name = "bMailContents";
+            this.bMailContents.Size = new System.Drawing.Size(173, 22);
+            this.bMailContents.Text = "この文書をメール送信";
+            this.bMailContents.Click += new System.EventHandler(this.bMailContents_Click);
             // 
             // toolStripSeparator6
             // 
@@ -365,58 +417,6 @@
             this.sfdPict.DefaultExt = "tif";
             this.sfdPict.Filter = "*.tif;*.tiff|*.tif;*.tiff";
             // 
-            // bMail
-            // 
-            this.bMail.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bMailContents});
-            this.bMail.Image = global::jtifedit3.Properties.Resources.NewMessageHS;
-            this.bMail.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.bMail.Name = "bMail";
-            this.bMail.Size = new System.Drawing.Size(136, 32);
-            this.bMail.Text = "選択ページをメール送信";
-            this.bMail.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.bMail.ButtonClick += new System.EventHandler(this.bMail_Click);
-            // 
-            // bMailContents
-            // 
-            this.bMailContents.Name = "bMailContents";
-            this.bMailContents.Size = new System.Drawing.Size(173, 22);
-            this.bMailContents.Text = "この文書をメール送信";
-            this.bMailContents.Click += new System.EventHandler(this.bMailContents_Click);
-            // 
-            // tv
-            // 
-            this.tv.AllowDrop = true;
-            this.tv.AutoScroll = true;
-            this.tv.BackColor = System.Drawing.Color.Transparent;
-            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tv.Location = new System.Drawing.Point(0, 0);
-            this.tv.Name = "tv";
-            this.tv.Picts = null;
-            this.tv.Sel2 = -1;
-            this.tv.Size = new System.Drawing.Size(260, 438);
-            this.tv.SSel = -1;
-            this.tv.TabIndex = 2;
-            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
-            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
-            this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
-            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
-            this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
-            this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
-            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
-            this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
-            // 
-            // pvw
-            // 
-            this.pvw.AutoScroll = true;
-            this.pvw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pvw.Location = new System.Drawing.Point(0, 0);
-            this.pvw.Name = "pvw";
-            this.pvw.Pic = null;
-            this.pvw.Size = new System.Drawing.Size(519, 438);
-            this.pvw.TabIndex = 0;
-            this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
-            // 
             // JForm
             // 
             this.AllowDrop = true;
@@ -429,6 +429,7 @@
             this.Text = "J TIFF Editor 3";
             this.Load += new System.EventHandler(this.JForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.JForm_DragDrop);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.JForm_FormClosed);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.JForm_DragEnter);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JForm_FormClosing);
             this.tsc.BottomToolStripPanel.ResumeLayout(false);

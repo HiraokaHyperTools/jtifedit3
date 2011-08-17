@@ -129,6 +129,22 @@ namespace jtifedit3 {
             }
         }
 
+        class TFUt {
+            internal static String FilterUnsafeTIFFTags(String fp, Tempfp tempfp) {
+                TCUt tcut = new TCUt(fp);
+                if (tcut.Test() > 0) {
+                    String fpOpen = tempfp.GetTempFileName();
+                    File.Copy(fp, fpOpen, true);
+
+                    using (FileStream fs = File.Open(fpOpen, FileMode.Open, FileAccess.ReadWrite, FileShare.Read)) {
+                        new TC.TIFCut().Cut(fs);
+                    }
+                    fp = fpOpen;
+                }
+                return fp;
+            }
+        }
+
         void Openf(String fp) {
             String fpOpen = fp;
 
@@ -137,7 +153,7 @@ namespace jtifedit3 {
                 if (!tcut.ConfirmTagsDisposal(this, false))
                     return;
 
-                fpOpen = Path.GetTempFileName();
+                fpOpen = tempfp.GetTempFileName();
                 File.Copy(fp, fpOpen, true);
 
                 using (FileStream fs = File.Open(fpOpen, FileMode.Open, FileAccess.ReadWrite, FileShare.Read)) {
@@ -331,6 +347,31 @@ namespace jtifedit3 {
             tv.AutoScrollPosition = (pos);
         }
 
+        Tempfp tempfp = new Tempfp();
+
+        class Tempfp {
+            List<string> fps = new List<string>();
+
+            public String GetTempFileName() {
+                String s = Path.GetTempFileName();
+                lock (this) fps.Add(s);
+                return s;
+            }
+
+            public void Cleanup() {
+                lock (this) {
+                    foreach (String fp in fps)
+                        try {
+                            File.Delete(fp);
+                        }
+                        catch (Exception) {
+
+                        }
+                    fps.Clear();
+                }
+            }
+        }
+
         private void tv_DragDrop(object sender, DragEventArgs e) {
             TvInsertMark iMark = tv.InsertMark;
             try {
@@ -340,10 +381,14 @@ namespace jtifedit3 {
 
                 String[] alfp = e.Data.GetData(DataFormats.FileDrop) as String[];
                 if (alfp != null) {
-                    DialogResult res;
-                    using (OpenWayForm form = new OpenWayForm(true))
-                        res = form.ShowDialog();
-                    if (res != DialogResult.Cancel) {
+                    DialogResult res = DialogResult.Yes; // insert there
+                    if (tv.Picts.Count == 0)
+                        using (OpenWayForm form = new OpenWayForm(false))
+                            res = form.ShowDialog();
+                    if (res == DialogResult.OK) {
+                        QueueOpenit(alfp);
+                    }
+                    else if (res != DialogResult.Cancel) {
                         bool fAppend = res == DialogResult.Retry;
                         bool fInsertAfter = res == DialogResult.Yes;
 
@@ -352,8 +397,9 @@ namespace jtifedit3 {
                         }
 
                         foreach (String fp in alfp) {
+                            String fpOpen = TFUt.FilterUnsafeTIFFTags(fp, tempfp);
                             FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
-                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fp, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
                             try {
                                 int cnt = FreeImage.GetPageCount(tif);
                                 for (int i = 0; i < cnt; i++) {
@@ -566,7 +612,7 @@ namespace jtifedit3 {
                 foreach (String kw in dict.Keys) s += "- " + kw + "\n";
 
                 if (dict.Count != 0) {
-                    if (MessageBox.Show(parent, (save ? "上書き保存しますと、他のソフトウェアで追加した情報を失う可能性が有ります。" : "続行しますと、他のソフトウェアで追加した情報を安全の為に削除致します。") + "情報：\n\n" + s + "\n" + "それでも、続行しますか。", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                    if (MessageBox.Show(parent, "安全の為、次の情報は削除してから編集します。\n\n" + s + "\n続行しますか?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
                         return false;
                 }
                 return true;
@@ -574,11 +620,6 @@ namespace jtifedit3 {
         }
 
         private void bSave_Click(object sender, EventArgs e) {
-            if (Currentfp != null) {
-                TCUt tcut = new TCUt(Currentfp);
-                if (tcut.Test() > 0 && !tcut.ConfirmTagsDisposal(this, true))
-                    return;
-            }
             Savef(Currentfp);
         }
 
@@ -651,7 +692,7 @@ namespace jtifedit3 {
                 return;
             }
 
-            String fpTmp = Path.GetTempFileName() + ".tif";
+            String fpTmp = tempfp.GetTempFileName() + ".tif";
 
             FIMULTIBITMAP tif = FreeImage.OpenMultiBitmap(FREE_IMAGE_FORMAT.FIF_TIFF, fpTmp, true, false, true, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
             try {
@@ -709,35 +750,27 @@ namespace jtifedit3 {
                 DialogResult res = DialogResult.None;
                 foreach (String fp in alfp) {
                     if (File.Exists(fp)) {
-                        using (OpenWayForm form = new OpenWayForm(false)) {
-                            res = form.ShowDialog();
-                        }
+                        if (Currentfp == null)
+                            res = DialogResult.OK;
+                        else
+                            using (OpenWayForm form = new OpenWayForm(false)) {
+                                res = form.ShowDialog();
+                            }
                         break;
                     }
                 }
 
                 if (false) { }
                 else if (res == DialogResult.OK) // Load it
-                    SynchronizationContext.Current.Post(delegate {
-                        foreach (String fp in alfp) {
-                            if (File.Exists(fp)) {
-                                switch (TrySave()) {
-                                    case TState.Yes:
-                                    case TState.No:
-                                        Openf(fp);
-                                        break;
-                                }
-                                return;
-                            }
-                        }
-                    }, null);
+                    QueueOpenit(alfp);
                 else if (res == DialogResult.Retry)// Append
                     SynchronizationContext.Current.Post(delegate {
                         using (WIPPanel wip = new WIPPanel(this)) {
                             foreach (String fp in alfp) {
                                 if (File.Exists(fp)) {
+                                    String fpOpen = TFUt.FilterUnsafeTIFFTags(fp, tempfp);
                                     FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
-                                    FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fp, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+                                    FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
                                     try {
                                         int cnt = FreeImage.GetPageCount(tif);
                                         for (int i = 0; i < cnt; i++) {
@@ -760,6 +793,22 @@ namespace jtifedit3 {
             }
         }
 
+        private void QueueOpenit(string[] alfp) {
+            SynchronizationContext.Current.Post(delegate {
+                foreach (String fp in alfp) {
+                    if (File.Exists(fp)) {
+                        switch (TrySave()) {
+                            case TState.Yes:
+                            case TState.No:
+                                Openf(fp);
+                                break;
+                        }
+                        return;
+                    }
+                }
+            }, null);
+        }
+
         private void bMailContents_Click(object sender, EventArgs e) {
             switch (TrySave2()) {
                 case TState.Yes: {
@@ -777,6 +826,10 @@ namespace jtifedit3 {
                         break;
                     }
             }
+        }
+
+        private void JForm_FormClosed(object sender, FormClosedEventArgs e) {
+            tempfp.Cleanup();
         }
     }
 }
