@@ -831,5 +831,70 @@ namespace jtifedit3 {
         private void JForm_FormClosed(object sender, FormClosedEventArgs e) {
             tempfp.Cleanup();
         }
+
+        private void bAppend_Click(object sender, EventArgs e) {
+            if (ofdAppend.ShowDialog(this) == DialogResult.OK) {
+                String[] alfp = ofdAppend.FileNames;
+                using (WIPPanel wip = new WIPPanel(this)) {
+                    foreach (String fp in alfp) {
+                        if (File.Exists(fp)) {
+                            String fpOpen = TFUt.FilterUnsafeTIFFTags(fp, tempfp);
+                            FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
+                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+                            try {
+                                int cnt = FreeImage.GetPageCount(tif);
+                                for (int i = 0; i < cnt; i++) {
+                                    FIBITMAP fib = FreeImage.LockPage(tif, i);
+                                    try {
+                                        tv.Picts.Add(new TvPict(FreeImage.Clone(fib)));
+                                    }
+                                    finally {
+                                        FreeImage.UnlockPage(tif, fib, false);
+                                    }
+                                }
+                            }
+                            finally {
+                                FreeImage.CloseMultiBitmapEx(ref tif);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void bAppend_DragDrop(object sender, DragEventArgs e) {
+            String[] alfp = e.Data.GetData(DataFormats.FileDrop) as String[];
+            if (alfp == null) return;
+            //Append
+            SynchronizationContext.Current.Post(delegate {
+                int cntAppended = 0;
+                using (WIPPanel wip = new WIPPanel(this)) {
+                    foreach (String fp in alfp) {
+                        if (File.Exists(fp)) {
+                            String fpOpen = TFUt.FilterUnsafeTIFFTags(fp, tempfp);
+                            FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
+                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+                            try {
+                                int cnt = FreeImage.GetPageCount(tif);
+                                for (int i = 0; i < cnt; i++) {
+                                    FIBITMAP fib = FreeImage.LockPage(tif, i);
+                                    try {
+                                        tv.Picts.Add(new TvPict(FreeImage.Clone(fib)));
+                                        cntAppended++;
+                                    }
+                                    finally {
+                                        FreeImage.UnlockPage(tif, fib, false);
+                                    }
+                                }
+                            }
+                            finally {
+                                FreeImage.CloseMultiBitmapEx(ref tif);
+                            }
+                        }
+                    }
+                }
+                MessageBox.Show(this, cntAppended + "ページ、最後に追加しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }, null);
+        }
     }
 }
