@@ -29,8 +29,11 @@
             this.ss = new System.Windows.Forms.StatusStrip();
             this.tssl = new System.Windows.Forms.ToolStripStatusLabel();
             this.vsc = new System.Windows.Forms.SplitContainer();
+            this.tv = new jtifedit3.ThumbView();
+            this.labelVSep = new System.Windows.Forms.Label();
             this.bAppend = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pvw = new jtifedit3.PreViewer();
             this.tstop = new System.Windows.Forms.ToolStrip();
             this.bNew = new System.Windows.Forms.ToolStripButton();
             this.bOpenf = new System.Windows.Forms.ToolStripButton();
@@ -58,9 +61,6 @@
             this.mThumb = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.sfdPict = new System.Windows.Forms.SaveFileDialog();
             this.ofdAppend = new System.Windows.Forms.OpenFileDialog();
-            this.tv = new jtifedit3.ThumbView();
-            this.pvw = new jtifedit3.PreViewer();
-            this.labelVSep = new System.Windows.Forms.Label();
             this.tsc.BottomToolStripPanel.SuspendLayout();
             this.tsc.ContentPanel.SuspendLayout();
             this.tsc.TopToolStripPanel.SuspendLayout();
@@ -135,6 +135,37 @@
             this.vsc.SplitterWidth = 6;
             this.vsc.TabIndex = 0;
             // 
+            // tv
+            // 
+            this.tv.AllowDrop = true;
+            this.tv.AutoScroll = true;
+            this.tv.BackColor = System.Drawing.Color.Transparent;
+            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tv.Location = new System.Drawing.Point(0, 0);
+            this.tv.Name = "tv";
+            this.tv.Picts = null;
+            this.tv.Sel2 = -1;
+            this.tv.Size = new System.Drawing.Size(260, 414);
+            this.tv.SSel = -1;
+            this.tv.TabIndex = 2;
+            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
+            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
+            this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
+            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
+            this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
+            this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
+            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
+            this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+            // 
+            // labelVSep
+            // 
+            this.labelVSep.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelVSep.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.labelVSep.Location = new System.Drawing.Point(0, 414);
+            this.labelVSep.Name = "labelVSep";
+            this.labelVSep.Size = new System.Drawing.Size(260, 1);
+            this.labelVSep.TabIndex = 4;
+            // 
             // bAppend
             // 
             this.bAppend.AllowDrop = true;
@@ -149,7 +180,7 @@
             this.bAppend.UseVisualStyleBackColor = false;
             this.bAppend.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
             this.bAppend.Click += new System.EventHandler(this.bAppend_Click);
-            this.bAppend.DragDrop += new System.Windows.Forms.DragEventHandler(this.bAppend_DragDrop);
+            this.bAppend.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
             this.bAppend.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
             // 
             // panel1
@@ -161,6 +192,17 @@
             this.panel1.Size = new System.Drawing.Size(519, 438);
             this.panel1.TabIndex = 2;
             this.panel1.TabStop = true;
+            // 
+            // pvw
+            // 
+            this.pvw.AutoScroll = true;
+            this.pvw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pvw.Location = new System.Drawing.Point(0, 0);
+            this.pvw.Name = "pvw";
+            this.pvw.Pic = null;
+            this.pvw.Size = new System.Drawing.Size(519, 438);
+            this.pvw.TabIndex = 0;
+            this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
             // 
             // tstop
             // 
@@ -411,48 +453,6 @@
             this.ofdAppend.DefaultExt = "tif";
             this.ofdAppend.Filter = "*.tif;*.tiff|*.tif;*.tiff";
             this.ofdAppend.Multiselect = true;
-            // 
-            // tv
-            // 
-            this.tv.AllowDrop = true;
-            this.tv.AutoScroll = true;
-            this.tv.BackColor = System.Drawing.Color.Transparent;
-            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tv.Location = new System.Drawing.Point(0, 0);
-            this.tv.Name = "tv";
-            this.tv.Picts = null;
-            this.tv.Sel2 = -1;
-            this.tv.Size = new System.Drawing.Size(260, 415);
-            this.tv.SSel = -1;
-            this.tv.TabIndex = 2;
-            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
-            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
-            this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
-            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
-            this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
-            this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
-            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
-            this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
-            // 
-            // pvw
-            // 
-            this.pvw.AutoScroll = true;
-            this.pvw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pvw.Location = new System.Drawing.Point(0, 0);
-            this.pvw.Name = "pvw";
-            this.pvw.Pic = null;
-            this.pvw.Size = new System.Drawing.Size(519, 438);
-            this.pvw.TabIndex = 0;
-            this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
-            // 
-            // labelVSep
-            // 
-            this.labelVSep.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.labelVSep.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.labelVSep.Location = new System.Drawing.Point(0, 414);
-            this.labelVSep.Name = "labelVSep";
-            this.labelVSep.Size = new System.Drawing.Size(260, 1);
-            this.labelVSep.TabIndex = 4;
             // 
             // JForm
             // 
