@@ -8,8 +8,8 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.5"
-!define APPVER "1_0_5"
+!define VER    "1.0.6"
+!define APPVER "1_0_6"
 
 !define MIME "image/tiff"
 
@@ -56,8 +56,6 @@ LicenseData GNUGPL2.txt
 
 UninstPage uninstConfirm
 UninstPage instfiles
-
-RequestExecutionLevel admin
 
 ;--------------------------------
 
