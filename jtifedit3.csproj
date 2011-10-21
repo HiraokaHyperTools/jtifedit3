@@ -176,6 +176,7 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\EditBrightContrastHS.png" />
     <None Include="Resources\TRight.ico" />
     <None Include="Resources\TLeft.ico" />
     <None Include="Resources\ExpandSpaceHS.png" />

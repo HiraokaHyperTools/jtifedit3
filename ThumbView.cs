@@ -293,8 +293,8 @@ namespace jtifedit3 {
             }
         }
 
-        Pen pSelFoc = new Pen( Color.FromArgb(50, 50, 250));
-        Pen pSel = new Pen( Color.FromArgb(150, 150, 200));
+        Pen pSelFoc = new Pen(Color.FromArgb(50, 50, 250));
+        Pen pSel = new Pen(Color.FromArgb(150, 150, 200));
 
         private void ThumbView_Resize(object sender, EventArgs e) {
             LayoutClient();
@@ -871,7 +871,14 @@ namespace jtifedit3 {
         public TvPict Clone() {
             TvPict o = (TvPict)MemberwiseClone();
             o.fib = FreeImage.Clone(fib);
+            o.thumbGen = new ThumbGen(o);
             return o;
+        }
+
+        public void Nega() {
+            FIBITMAP fibNew = FreeImage.Clone(fib);
+            FreeImage.Invert(fibNew);
+            Picture = fibNew;
         }
     }
 }
