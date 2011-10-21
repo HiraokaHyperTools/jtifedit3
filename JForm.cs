@@ -374,17 +374,26 @@ namespace jtifedit3 {
 
         private void tv_DragDrop(object sender, DragEventArgs e) {
             TvInsertMark iMark = tv.InsertMark;
+            bool forceAppend = (sender == bAppend);
             try {
-                int iAt = iMark.Item + ((0 != (iMark.Location & (TvInsertMarkLocation.Right | TvInsertMarkLocation.Bottom))) ? 1 : 0);
+                int iAt = forceAppend
+                    ? tv.Picts.Count
+                    : (iMark.Item + ((0 != (iMark.Location & (TvInsertMarkLocation.Right | TvInsertMarkLocation.Bottom))) ? 1 : 0))
+                    ;
 
                 bool isCopy = 0 != (e.Effect & DragDropEffects.Copy);
+
+                int cntAdded = 0;
 
                 String[] alfp = e.Data.GetData(DataFormats.FileDrop) as String[];
                 if (alfp != null) {
                     DialogResult res = DialogResult.Yes; // insert there
                     if (tv.Picts.Count == 0)
-                        using (OpenWayForm form = new OpenWayForm(false))
-                            res = form.ShowDialog();
+                        if (forceAppend)
+                            res = DialogResult.Yes; // insert (append) there
+                        else
+                            using (OpenWayForm form = new OpenWayForm(false))
+                                res = form.ShowDialog();
                     if (res == DialogResult.OK) {
                         QueueOpenit(alfp);
                     }
@@ -407,6 +416,7 @@ namespace jtifedit3 {
                                     try {
                                         tv.Picts.Insert(iAt, new TvPict(FreeImage.Clone(fib)));
                                         iAt++;
+                                        cntAdded++;
                                     }
                                     finally {
                                         FreeImage.UnlockPage(tif, fib, false);
@@ -434,6 +444,7 @@ namespace jtifedit3 {
                         if (isCopy) {
                             for (int x = 0; x < al.Count; x++) {
                                 tv.Picts.Insert(iAt + x, al[x].Clone());
+                                cntAdded++;
                             }
                         }
                         else {
@@ -448,6 +459,7 @@ namespace jtifedit3 {
                                     iAt -= cnt;
                                 for (int x = 0; x < al.Count; x++) {
                                     tv.Picts.Insert(iAt + x, al[x]);
+                                    cntAdded++;
                                 }
                             }
                         }
@@ -455,11 +467,19 @@ namespace jtifedit3 {
                     else {
                         for (int x = 0; x < cnt; x++) {
                             tv.Picts.Insert(iAt + x, new TvPict(CPUt.GetPic(e.Data, iSelFirst + x)));
+                            cntAdded++;
                         }
                         if (!isCopy) {
-                            e.Data.SetData("Pasted", (int)1);
+                            try {
+                                e.Data.SetData("Pasted", (int)1);
+                            }
+                            catch (Exception) { }
                         }
                     }
+                }
+
+                if (forceAppend && cntAdded != 0) {
+                    MessageBox.Show(this, cntAdded + "ページ、最後に" + (isCopy ? "追加" : "移動") + "しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             finally {
@@ -860,41 +880,6 @@ namespace jtifedit3 {
                     }
                 }
             }
-        }
-
-        private void bAppend_DragDrop(object sender, DragEventArgs e) {
-            String[] alfp = e.Data.GetData(DataFormats.FileDrop) as String[];
-            if (alfp == null) return;
-            //Append
-            SynchronizationContext.Current.Post(delegate {
-                int cntAppended = 0;
-                using (WIPPanel wip = new WIPPanel(this)) {
-                    foreach (String fp in alfp) {
-                        if (File.Exists(fp)) {
-                            String fpOpen = TFUt.FilterUnsafeTIFFTags(fp, tempfp);
-                            FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
-                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
-                            try {
-                                int cnt = FreeImage.GetPageCount(tif);
-                                for (int i = 0; i < cnt; i++) {
-                                    FIBITMAP fib = FreeImage.LockPage(tif, i);
-                                    try {
-                                        tv.Picts.Add(new TvPict(FreeImage.Clone(fib)));
-                                        cntAppended++;
-                                    }
-                                    finally {
-                                        FreeImage.UnlockPage(tif, fib, false);
-                                    }
-                                }
-                            }
-                            finally {
-                                FreeImage.CloseMultiBitmapEx(ref tif);
-                            }
-                        }
-                    }
-                }
-                MessageBox.Show(this, cntAppended + "ページ、最後に追加しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }, null);
         }
     }
 }
