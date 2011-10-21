@@ -543,6 +543,7 @@ namespace jtifedit3 {
                             foreach (jtifedit2.TIF.Entry e in al) {
                                 // from http://www.awaresystems.be/imaging/tiff/tifftags/private.html
                                 switch (e.tag) {
+#if false
                                     case 0x8649: dict["Adobe Photoshop"] = null; break;
                                     case 0x935C: dict["Adobe Photoshop"] = null; break;
                                     case 0xC612: dict["DNG"] = null; break;
@@ -612,6 +613,7 @@ namespace jtifedit3 {
                                     case 0xC429: dict["Oce scanning"] = null; break;
                                     case 0xC42A: dict["Oce scanning"] = null; break;
                                     case 0xC660: dict["Sketchbook Pro"] = null; break;
+#endif
                                     case 0x8769: dict["Exif IFD"] = null; break;
                                     case 0x8825: dict["GPS IFD"] = null; break;
                                     case 0x8773: dict["ICC Profile"] = null; break;
@@ -661,9 +663,8 @@ namespace jtifedit3 {
             try {
                 for (int x = 0; x < tv.Picts.Count; x++) {
                     FIBITMAP dib = tv.Picts[x].Picture;
-
                     FREE_IMAGE_COLOR_TYPE fict = FreeImage.GetColorType(dib);
-                    if (fict == FREE_IMAGE_COLOR_TYPE.FIC_MINISBLACK) {
+                    if (fict == FREE_IMAGE_COLOR_TYPE.FIC_MINISBLACK && FreeImage.GetBPP(dib) == 1) {
                         FreeImage.Invert(dib);
                         try {
                             Palette P = FreeImage.GetPaletteEx(dib);
@@ -879,6 +880,13 @@ namespace jtifedit3 {
                         }
                     }
                 }
+            }
+        }
+
+        private void bNega_Click(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; x++) {
+                tv.Picts[x].Nega();
+                tv.Picts.ResetItem(x);
             }
         }
     }
