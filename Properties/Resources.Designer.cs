@@ -60,6 +60,20 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap _1 {
+            get {
+                object obj = ResourceManager.GetObject("1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ColorHS {
+            get {
+                object obj = ResourceManager.GetObject("ColorHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap DataContainer_NewRecordHS {
             get {
                 object obj = ResourceManager.GetObject("DataContainer_NewRecordHS", resourceCulture);
@@ -123,6 +137,13 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap PlayHS {
+            get {
+                object obj = ResourceManager.GetObject("PlayHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap question {
             get {
                 object obj = ResourceManager.GetObject("question", resourceCulture);
@@ -137,6 +158,13 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap saveHS1 {
+            get {
+                object obj = ResourceManager.GetObject("saveHS1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap TLeft {
             get {
                 object obj = ResourceManager.GetObject("TLeft", resourceCulture);
@@ -147,6 +175,13 @@ namespace jtifedit3.Properties {
         internal static System.Drawing.Bitmap TRight {
             get {
                 object obj = ResourceManager.GetObject("TRight", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap WarningHS {
+            get {
+                object obj = ResourceManager.GetObject("WarningHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
