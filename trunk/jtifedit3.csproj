@@ -62,6 +62,12 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EdForm.Designer.cs">
+      <DependentUpon>EdForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FitRect3.cs" />
     <Compile Include="FR3Form.cs">
       <SubType>Form</SubType>
@@ -92,6 +98,10 @@
     <EmbeddedResource Include="AboutForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EdForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EdForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FR3Form.resx">
       <SubType>Designer</SubType>
@@ -176,6 +186,10 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\PlayHS.png" />
+    <None Include="Resources\WarningHS.png" />
+    <None Include="Resources\saveHS1.png" />
+    <None Include="Resources\ColorHS.png" />
     <None Include="Resources\EditBrightContrastHS.png" />
     <None Include="Resources\TRight.ico" />
     <None Include="Resources\TLeft.ico" />

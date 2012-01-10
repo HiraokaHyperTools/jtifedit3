@@ -38,8 +38,9 @@ namespace jtifedit3 {
 
             switch (MessageBox.Show(this, "変更されています。保存しますか。", Path.GetFileName(Currentfp), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)) {
                 case DialogResult.Yes:
-                    Savef(Currentfp);
-                    return TState.Yes;
+                    if (Savef(Currentfp))
+                        return TState.Yes;
+                    return TState.Cancel;
                 case DialogResult.No:
                     return TState.No;
                 default:
@@ -52,8 +53,9 @@ namespace jtifedit3 {
 
             switch (MessageBox.Show(this, "先に保存しますか。", Path.GetFileName(Currentfp), MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)) {
                 case DialogResult.Yes:
-                    Savef(Currentfp);
-                    return TState.Yes;
+                    if (Savef(Currentfp))
+                        return TState.Yes;
+                    return TState.Cancel;
                 case DialogResult.No:
                 default:
                     return TState.No;
@@ -67,11 +69,36 @@ namespace jtifedit3 {
                     tv.Picts.Clear();
                     Currentfp = null;
                     Modified = false;
+                    ExifCut = false;
+                    ReadOnly = false;
                     break;
             }
         }
 
         String TTLTemp = String.Empty;
+
+        bool exifCut = false;
+
+        bool ExifCut {
+            get {
+                return exifCut;
+            }
+            set {
+                tlpExifCut.Visible = exifCut = value;
+            }
+        }
+
+        bool isReadOnly = false;
+
+        bool ReadOnly {
+            get {
+                return isReadOnly;
+            }
+            set {
+                isReadOnly = value;
+                UpdateTTL();
+            }
+        }
 
         bool Modified {
             get {
@@ -98,6 +125,7 @@ namespace jtifedit3 {
                 ? Path.GetFileName(fpCurrent) + (Modified ? "*" : "") + " -- " + TTLTemp
                 : TTLTemp + (Modified ? " *" : "")
                 ;
+            if (isReadOnly) this.Text += " [読取専用]";
         }
 
         private void JForm_Load(object sender, EventArgs e) {
@@ -105,9 +133,6 @@ namespace jtifedit3 {
             tv.Picts.ListChanged += new ListChangedEventHandler(Picts_ListChanged);
 
             TTLTemp = this.Text;
-
-            tstop.Location = Point.Empty;
-            tsvis.Location = new Point(0, tstop.Height);
 
             if (fp != null) Openf(fp);
 
@@ -150,16 +175,23 @@ namespace jtifedit3 {
 
             TCUt tcut = new TCUt(fp);
             if (tcut.Test() > 0) {
-                if (!tcut.ConfirmTagsDisposal(this, false))
-                    return;
+                ExifCut = true;
+
+                lExifCutWhat.Text = tcut.DisposalTags;
 
                 fpOpen = tempfp.GetTempFileName();
                 File.Copy(fp, fpOpen, true);
+                File.SetAttributes(fpOpen, File.GetAttributes(fpOpen) & ~FileAttributes.ReadOnly);
 
                 using (FileStream fs = File.Open(fpOpen, FileMode.Open, FileAccess.ReadWrite, FileShare.Read)) {
                     new TC.TIFCut().Cut(fs);
                 }
             }
+            else {
+                ExifCut = false;
+            }
+
+            ReadOnly = 0 != (File.GetAttributes(fp) & FileAttributes.ReadOnly);
 
             FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_TIFF;
             FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
@@ -629,6 +661,12 @@ namespace jtifedit3 {
                 }
             }
 
+            public string DisposalTags {
+                get {
+                    return string.Join(", ", new List<string>(dict.Keys).ToArray());
+                }
+            }
+
             public bool ConfirmTagsDisposal(IWin32Window parent, bool save) {
                 String s = "";
                 foreach (String kw in dict.Keys) s += "- " + kw + "\n";
@@ -645,19 +683,43 @@ namespace jtifedit3 {
             Savef(Currentfp);
         }
 
-        private void Savef(String fp) {
-            if (fp == null) {
+        private bool Savef(String fp) {
+            if (fp == null || ReadOnly || (0 != (File.GetAttributes(fp) & FileAttributes.ReadOnly))) {
                 sfdPict.FileName = Currentfp;
+            _Retry:
                 if (sfdPict.ShowDialog(this) != DialogResult.OK)
-                    return;
+                    return false;
+                if (File.Exists(sfdPict.FileName) && 0 != (File.GetAttributes(sfdPict.FileName) & FileAttributes.ReadOnly)) {
+                    switch (MessageBox.Show(this, "指定したファイルは読取専用です。書き込みできません。\n\n書き込みできるように、先に読取専用を解除しますか?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)) {
+                        case DialogResult.Yes:
+                            try {
+                                File.SetAttributes(sfdPict.FileName, File.GetAttributes(sfdPict.FileName) & ~FileAttributes.ReadOnly);
+                            }
+                            catch (Exception) {
+                                MessageBox.Show(this, "失敗しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                goto _Retry;
+                            }
+                            MessageBox.Show(this, "完了しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        case DialogResult.No:
+                            goto _Retry;
+                        case DialogResult.Cancel:
+                        default:
+                            MessageBox.Show(this, "保存を中止しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return false;
+                    }
+                }
                 fp = sfdPict.FileName;
             }
 
             String fpbak = Path.ChangeExtension(fp, ".bak");
-            if (File.Exists(fpbak))
-                File.Delete(fpbak);
-            if (File.Exists(fp))
-                File.Move(fp, fpbak);
+
+            try {
+                File.Copy(fp, fpbak, true);
+            }
+            catch (Exception) {
+
+            }
 
             FIMULTIBITMAP tif = FreeImage.OpenMultiBitmap(FREE_IMAGE_FORMAT.FIF_TIFF, fp, true, false, false, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
             try {
@@ -685,9 +747,18 @@ namespace jtifedit3 {
                 }
                 Currentfp = fp;
                 Modified = false;
+                ReadOnly = false;
 
-                if (File.Exists(fpbak))
-                    File.Delete(fpbak);
+                if (File.Exists(fpbak)) {
+                    try {
+                        File.Delete(fpbak);
+                    }
+                    catch (Exception) {
+
+                    }
+                }
+
+                return true;
             }
             finally {
                 FreeImage.CloseMultiBitmap(tif, FREE_IMAGE_SAVE_FLAGS.DEFAULT);
@@ -888,6 +959,51 @@ namespace jtifedit3 {
                 tv.Picts[x].Nega();
                 tv.Picts.ResetItem(x);
             }
+        }
+
+        private void bMSPaint_Click(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                String fp = Path.GetTempFileName() + ".tif";
+                FIBITMAP dib = tv.Picts[x].Picture;
+                uint rx = FreeImage.GetResolutionX(dib);
+                uint ry = FreeImage.GetResolutionY(dib);
+                FreeImage.Save(FREE_IMAGE_FORMAT.FIF_TIFF, dib, fp, (FreeImage.GetBPP(dib) == 1) ? FREE_IMAGE_SAVE_FLAGS.TIFF_CCITTFAX4 : FREE_IMAGE_SAVE_FLAGS.TIFF_LZW);
+                using (EdForm form = new EdForm(fp)) {
+                    while (true) {
+                        try {
+                            Process.Start("mspaint.exe", " \"" + fp + "\"");
+                        }
+                        catch (Exception) {
+                            MessageBox.Show(this, "失敗しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                        switch (form.ShowDialog()) {
+                            case DialogResult.OK: {
+                                    FIBITMAP dibNew = FreeImage.Load(FREE_IMAGE_FORMAT.FIF_TIFF, fp, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
+                                    FreeImage.SetResolutionX(dibNew, rx);
+                                    FreeImage.SetResolutionY(dibNew, ry);
+                                    tv.Picts[x].Picture = dibNew;
+                                    tv.Picts.ResetItem(x);
+                                    goto _Break;
+                                }
+                            case DialogResult.Retry:
+                                continue;
+                            default:
+                                return;
+                        }
+                    _Break: ;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        private void llHideExifCut_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        }
+
+        private void bHideExifCut_Click(object sender, EventArgs e) {
+            tlpExifCut.Hide();
         }
     }
 }
