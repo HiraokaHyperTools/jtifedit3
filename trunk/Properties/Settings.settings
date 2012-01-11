@@ -1,7 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="jtifedit3.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="PrintMargins" Type="System.Drawing.Printing.Margins" Scope="User">
+      <Value Profile="(Default)">20, 20, 20, 20</Value>
+    </Setting>
+    <Setting Name="PrintPaper" Type="System.Drawing.Printing.PaperKind" Scope="User">
+      <Value Profile="(Default)">Custom</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
