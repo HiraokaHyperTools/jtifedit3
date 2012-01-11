@@ -19,6 +19,7 @@ namespace jtifedit3 {
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new PageSetForm());
             Application.Run(new JForm(fp));
             //Application.Run(new FR3Form());
         }

@@ -144,6 +144,20 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap PrintHS {
+            get {
+                object obj = ResourceManager.GetObject("PrintHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap PrintSetupHS {
+            get {
+                object obj = ResourceManager.GetObject("PrintSetupHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap question {
             get {
                 object obj = ResourceManager.GetObject("question", resourceCulture);

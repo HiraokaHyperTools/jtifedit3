@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Drawing.Printing;
+using jtifedit3.Properties;
 
 namespace jtifedit3 {
     public partial class JForm : Form {
@@ -126,6 +128,14 @@ namespace jtifedit3 {
                 : TTLTemp + (Modified ? " *" : "")
                 ;
             if (isReadOnly) this.Text += " [読取専用]";
+        }
+
+        String PrintTitle {
+            get {
+                if (fpCurrent != null)
+                    return Path.GetFileNameWithoutExtension(fpCurrent);
+                return Path.GetFileNameWithoutExtension(TTLTemp);
+            }
         }
 
         private void JForm_Load(object sender, EventArgs e) {
@@ -1004,6 +1014,295 @@ namespace jtifedit3 {
 
         private void bHideExifCut_Click(object sender, EventArgs e) {
             tlpExifCut.Hide();
+        }
+
+        class PUt {
+            public static PaperSize Guess(Bitmap pic) {
+                float xDPI = pic.HorizontalResolution;
+                float yDPI = pic.VerticalResolution;
+                int cx = pic.Width;
+                int cy = pic.Height;
+
+                float xmm = cx / xDPI * 2.560344827586206896551724137931f;
+                float ymm = cy / yDPI * 2.560344827586206896551724137931f;
+
+                float X = Math.Min(xmm, ymm);
+                float Y = Math.Max(xmm, ymm);
+
+                //MessageBox.Show(String.Format("dpi({0},{1}) cxcy({2},{3}) mm({4},{5})", xDPI, yDPI, cx, cy, xmm, ymm));
+
+                { 	// B5
+                    float D = 2, Px = 18.2f, Py = 25.72f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("B5", 717, 1012);
+                }
+                {	// A4
+                    float D = 2, Px = 21.00f, Py = 29.70f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("A4", 827, 1169);
+                }
+                {	// B4
+                    float D = 2, Px = 25.72f, Py = 36.41f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("B4", 1012, 1433);
+                }
+                { 	// A3
+                    float D = 2, Px = 29.7f, Py = 42.0f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("A3", 1169, 1654);
+                }
+                { 	// B3
+                    float D = 2, Px = 36.41f, Py = 51.51f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("B3", 1433, 2028);
+                }
+                { 	// A2
+                    float D = 2, Px = 42.00f, Py = 59.40f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("A2", 1654, 2339);
+                }
+                { 	// B2
+                    float D = 2, Px = 51.51f, Py = 72.81f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("B2", 2028, 2867);
+                }
+                { 	// A1
+                    float D = 2, Px = 59.41f, Py = 84.10f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("A1", 2339, 3311);
+                }
+                { 	// B1
+                    float D = 2, Px = 72.81f, Py = 103.01f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("B1", 2867, 4056);
+                }
+                { 	// A0
+                    float D = 2, Px = 84.10f, Py = 118.89f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("A0", 3311, 4680);
+                }
+                { 	// B0
+                    float D = 2, Px = 103.01f, Py = 145.59f;
+                    if (Px - D <= X && X <= Px + D && Py - D <= Y && Y <= Py + D)
+                        return new PaperSize("B0", 4056, 5732);
+                }
+
+                return new PaperSize("A4", 827, 1169);
+            }
+        }
+
+        class PUt2 {
+            internal static bool IsLandscape(Bitmap pic) {
+                return pic.Width * pic.HorizontalResolution > pic.Height * pic.VerticalResolution;
+            }
+        }
+
+        class PUt5 {
+            internal static bool GetCollate(PrinterSettings printerSettings) {
+                DEVMODE dm = (DEVMODE)Marshal.PtrToStructure(printerSettings.GetHdevmode(), typeof(DEVMODE));
+                return dm.dmCollate != 0;
+            }
+
+            [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
+            struct DEVMODE {
+                public const int CCHDEVICENAME = 32;
+                public const int CCHFORMNAME = 32;
+
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHDEVICENAME)]
+                [System.Runtime.InteropServices.FieldOffset(0)]
+                public string dmDeviceName;
+                [System.Runtime.InteropServices.FieldOffset(32)]
+                public Int16 dmSpecVersion;
+                [System.Runtime.InteropServices.FieldOffset(34)]
+                public Int16 dmDriverVersion;
+                [System.Runtime.InteropServices.FieldOffset(36)]
+                public Int16 dmSize;
+                [System.Runtime.InteropServices.FieldOffset(38)]
+                public Int16 dmDriverExtra;
+                [System.Runtime.InteropServices.FieldOffset(40)]
+                public DM dmFields;
+
+                [System.Runtime.InteropServices.FieldOffset(44)]
+                Int16 dmOrientation;
+                [System.Runtime.InteropServices.FieldOffset(46)]
+                Int16 dmPaperSize;
+                [System.Runtime.InteropServices.FieldOffset(48)]
+                Int16 dmPaperLength;
+                [System.Runtime.InteropServices.FieldOffset(50)]
+                Int16 dmPaperWidth;
+                [System.Runtime.InteropServices.FieldOffset(52)]
+                Int16 dmScale;
+                [System.Runtime.InteropServices.FieldOffset(54)]
+                Int16 dmCopies;
+                [System.Runtime.InteropServices.FieldOffset(56)]
+                Int16 dmDefaultSource;
+                [System.Runtime.InteropServices.FieldOffset(58)]
+                Int16 dmPrintQuality;
+
+                [System.Runtime.InteropServices.FieldOffset(44)]
+                public POINTL dmPosition;
+                [System.Runtime.InteropServices.FieldOffset(52)]
+                public Int32 dmDisplayOrientation;
+                [System.Runtime.InteropServices.FieldOffset(56)]
+                public Int32 dmDisplayFixedOutput;
+
+                [System.Runtime.InteropServices.FieldOffset(60)]
+                public short dmColor;
+                [System.Runtime.InteropServices.FieldOffset(62)]
+                public short dmDuplex;
+                [System.Runtime.InteropServices.FieldOffset(64)]
+                public short dmYResolution;
+                [System.Runtime.InteropServices.FieldOffset(66)]
+                public short dmTTOption;
+                [System.Runtime.InteropServices.FieldOffset(68)]
+                public short dmCollate;
+                [System.Runtime.InteropServices.FieldOffset(72)]
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHFORMNAME)]
+                public string dmFormName;
+                [System.Runtime.InteropServices.FieldOffset(102)]
+                public Int16 dmLogPixels;
+                [System.Runtime.InteropServices.FieldOffset(104)]
+                public Int32 dmBitsPerPel;
+                [System.Runtime.InteropServices.FieldOffset(108)]
+                public Int32 dmPelsWidth;
+                [System.Runtime.InteropServices.FieldOffset(112)]
+                public Int32 dmPelsHeight;
+                [System.Runtime.InteropServices.FieldOffset(116)]
+                public Int32 dmDisplayFlags;
+                [System.Runtime.InteropServices.FieldOffset(116)]
+                public Int32 dmNup;
+                [System.Runtime.InteropServices.FieldOffset(120)]
+                public Int32 dmDisplayFrequency;
+            }
+
+            [Flags()]
+            enum DM : int {
+                Orientation = 0x1,
+                PaperSize = 0x2,
+                PaperLength = 0x4,
+                PaperWidth = 0x8,
+                Scale = 0x10,
+                Position = 0x20,
+                NUP = 0x40,
+                DisplayOrientation = 0x80,
+                Copies = 0x100,
+                DefaultSource = 0x200,
+                PrintQuality = 0x400,
+                Color = 0x800,
+                Duplex = 0x1000,
+                YResolution = 0x2000,
+                TTOption = 0x4000,
+                Collate = 0x8000,
+                FormName = 0x10000,
+                LogPixels = 0x20000,
+                BitsPerPixel = 0x40000,
+                PelsWidth = 0x80000,
+                PelsHeight = 0x100000,
+                DisplayFlags = 0x200000,
+                DisplayFrequency = 0x400000,
+                ICMMethod = 0x800000,
+                ICMIntent = 0x1000000,
+                MediaType = 0x2000000,
+                DitherType = 0x4000000,
+                PanningWidth = 0x8000000,
+                PanningHeight = 0x10000000,
+                DisplayFixedOutput = 0x20000000
+            }
+
+            struct POINTL {
+                public Int32 x;
+                public Int32 y;
+            }
+        }
+
+        private void bPrint_Click(object sender, EventArgs e) {
+            pGo.PrinterSettings.FromPage = 1 + tv.SelFirst;
+            pGo.PrinterSettings.ToPage = 1 + tv.SelLast;
+            pGo.PrinterSettings.MinimumPage = 1;
+            pGo.PrinterSettings.MaximumPage = tv.Picts.Count;
+            pGo.PrinterSettings.PrintRange = System.Drawing.Printing.PrintRange.SomePages;
+
+            if (pGo.PrinterSettings.FromPage < 1)
+                return;
+
+            if (pGo.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            pGo.PrinterSettings.Collate = PUt5.GetCollate(pGo.PrinterSettings);
+
+            stat = new PrintStat();
+
+            if (pGo.PrinterSettings.PrintRange == PrintRange.AllPages) {
+                stat.CurPage =
+                stat.FromPage = pGo.PrinterSettings.MinimumPage;
+                stat.ToPage = pGo.PrinterSettings.MaximumPage;
+            }
+            else {
+                stat.CurPage =
+                stat.FromPage = pGo.PrinterSettings.FromPage;
+                stat.ToPage = pGo.PrinterSettings.ToPage;
+            }
+
+            pDocGo.DocumentName = PrintTitle;
+            pDocGo.Print();
+        }
+
+        PrintStat stat = null;
+
+        class PrintStat {
+            public int CurPage, FromPage, ToPage;
+            public Bitmap picFrm;
+
+            public bool HasMorePage {
+                get {
+                    return CurPage < ToPage;
+                }
+            }
+            public void Next() {
+                ++CurPage;
+                if (picFrm != null)
+                    picFrm.Dispose();
+            }
+        }
+
+        class PUt3 {
+            internal static PaperSize Find(PrinterSettings.PaperSizeCollection paperSizeCollection, PaperKind paperKind) {
+                foreach (PaperSize paperSize in paperSizeCollection) {
+                    if (paperSize.Kind == paperKind)
+                        return paperSize;
+                }
+                return new PaperSize();
+            }
+        }
+
+        private void pDocGo_QueryPageSettings(object sender, System.Drawing.Printing.QueryPageSettingsEventArgs e) {
+            TvPict pict = tv.Picts[stat.CurPage - 1];
+            FIBITMAP dib = pict.Picture;
+            stat.picFrm = FreeImage.GetBitmap(dib);
+
+            e.PageSettings.Margins = Settings.Default.PrintMargins; // new Margins(20, 20, 20, 20); // 5mm
+            e.PageSettings.PaperSize = Settings.Default.PrintPaper == PaperKind.Custom
+                ? PUt.Guess(stat.picFrm) // 混載
+                : PUt3.Find(e.PageSettings.PrinterSettings.PaperSizes, Settings.Default.PrintPaper); // 統一サイズ
+            e.PageSettings.Landscape = PUt2.IsLandscape(stat.picFrm); // 横?
+        }
+
+        private void pDocGo_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e) {
+            e.HasMorePages = stat.HasMorePage;
+            Graphics cv = e.Graphics;
+            SizeF byReso = new SizeF(stat.picFrm.Width / stat.picFrm.HorizontalResolution, stat.picFrm.Height / stat.picFrm.VerticalResolution);
+            cv.PageUnit = GraphicsUnit.Inch;
+            cv.DrawImage(stat.picFrm, FitRect3.FitF(cv.VisibleClipBounds, byReso));
+            stat.Next();
+        }
+
+        private void pDocGo_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e) {
+
+        }
+
+        private void bPageSetting_Click(object sender, EventArgs e) {
+            using (PageSetForm form = new PageSetForm())
+                form.ShowDialog(this);
         }
     }
 }

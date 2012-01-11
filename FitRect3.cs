@@ -43,5 +43,44 @@ namespace jtifedit3 {
                 }
             }
         }
+
+        public static RectangleF FitF(RectangleF rcClip, SizeF sizePic) {
+            if (sizePic.Width <= rcClip.Width && sizePic.Height <= rcClip.Height) {
+                // 中央寄せ
+                return new RectangleF(
+                    rcClip.Left + (rcClip.Width - sizePic.Width) / 2,
+                    rcClip.Top + (rcClip.Height - sizePic.Height) / 2,
+                    sizePic.Width,
+                    sizePic.Height
+                    );
+            }
+            else {
+                // 縮小
+                float fClip = (float)rcClip.Width / Math.Max(1, rcClip.Height);
+                float fPic = (float)sizePic.Width / Math.Max(1, sizePic.Height);
+                if (fClip <= fPic) {
+                    // 画像横長
+                    float yc = (rcClip.Top + rcClip.Bottom) / 2;
+                    float yv = (int)(((double)sizePic.Height / sizePic.Width) * rcClip.Width);
+                    return RectangleF.FromLTRB(
+                        rcClip.Left,
+                        yc - yv / 2,
+                        rcClip.Right,
+                        yc - yv / 2 + yv
+                        );
+                }
+                else {
+                    // 画像縦長
+                    float xc = (rcClip.Left + rcClip.Right) / 2;
+                    float xv = (int)(((double)sizePic.Width / sizePic.Height) * rcClip.Height);
+                    return RectangleF.FromLTRB(
+                        xc - xv / 2,
+                        rcClip.Top,
+                        xc - xv / 2 + xv,
+                        rcClip.Bottom
+                        );
+                }
+            }
+        }
     }
 }

@@ -87,6 +87,12 @@
     <Compile Include="OpenWayForm.Designer.cs">
       <DependentUpon>OpenWayForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PageSetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PageSetForm.Designer.cs">
+      <DependentUpon>PageSetForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PreViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -114,6 +120,10 @@
     <EmbeddedResource Include="OpenWayForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>OpenWayForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PageSetForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PageSetForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PreViewer.resx">
       <SubType>Designer</SubType>
@@ -186,6 +196,9 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
+    <None Include="Resources\PrintSetupHS.png" />
+    <None Include="Resources\PrintHS.png" />
     <None Include="Resources\PlayHS.png" />
     <None Include="Resources\WarningHS.png" />
     <None Include="Resources\saveHS1.png" />
