@@ -8,8 +8,8 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.10"
-!define APPVER "1_0_10"
+!define VER    "1.0.11"
+!define APPVER "1_0_11"
 
 !define MIME "image/tiff"
 
