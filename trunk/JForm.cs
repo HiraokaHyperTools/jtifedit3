@@ -142,6 +142,13 @@ namespace jtifedit3 {
         }
 
         private void JForm_Load(object sender, EventArgs e) {
+            {
+                Control[] ary = new Control[] { tstop, tsvis };
+                Control.ControlCollection col = tsc.TopToolStripPanel.Controls;
+                col.Clear();
+                col.AddRange(ary);
+            }
+
             tv.Picts = new BindingList<TvPict>();
             tv.Picts.ListChanged += new ListChangedEventHandler(Picts_ListChanged);
 
@@ -1105,6 +1112,33 @@ namespace jtifedit3 {
             }
         }
 
+        class PUt4 {
+            internal static bool IfSameSize(System.Collections.ObjectModel.Collection<TvPict> e, int frm, int to) {
+                float inchX0 = 0, inchY0 = 0;
+                for (int cur = frm; cur <= to; cur++) {
+                    TvPict pict = e[cur - 1];
+                    FIBITMAP fib = pict.Picture;
+                    uint cx = FreeImage.GetWidth(fib);
+                    uint cy = FreeImage.GetHeight(fib);
+                    uint rx = FreeImage.GetResolutionX(fib);
+                    uint ry = FreeImage.GetResolutionY(fib);
+                    float vx = (float)cx / (float)rx;
+                    float vy = (float)cy / (float)ry;
+                    float inchX = Math.Min(vx, vy); // 短辺
+                    float inchY = Math.Max(vx, vy); // 長辺
+                    if (cur == frm) {
+                        inchX0 = inchX;
+                        inchY0 = inchY;
+                    }
+                    else {
+                        if (Math.Abs(inchX - inchX0) > 0.5f || Math.Abs(inchY - inchY0) > 0.5f)
+                            return false;
+                    }
+                }
+                return true;
+            }
+        }
+
         private void bPrint_Click(object sender, EventArgs e) {
             pGo.PrinterSettings.FromPage = 1 + tv.SelFirst;
             pGo.PrinterSettings.ToPage = 1 + tv.SelLast;
@@ -1133,8 +1167,17 @@ namespace jtifedit3 {
                 stat.ToPage = pGo.PrinterSettings.ToPage;
             }
 
-            pDocGo.DocumentName = PrintTitle;
-            pDocGo.Print();
+            stat.CutPerPage = !PUt4.IfSameSize(tv.Picts, stat.FromPage, stat.ToPage);
+
+            while (true) {
+                pDocGo.DocumentName = PrintTitle + " p." + stat.CurPage.ToString("0000");
+                pDocGo.Print();
+
+                if (!stat.CutPerPage) break;
+                if (stat.HasMorePage) continue;
+                if (stat.Need1More) continue;
+                break;
+            }
         }
 
         PrintStat stat = null;
@@ -1142,6 +1185,8 @@ namespace jtifedit3 {
         class PrintStat {
             public int CurPage, FromPage, ToPage;
             public Bitmap picFrm;
+            public bool CutPerPage = false;
+            public bool Need1More = false;
 
             public bool HasMorePage {
                 get {
@@ -1178,7 +1223,8 @@ namespace jtifedit3 {
         }
 
         private void pDocGo_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e) {
-            e.HasMorePages = stat.HasMorePage;
+            e.HasMorePages = stat.HasMorePage && !stat.CutPerPage;
+            stat.Need1More = stat.HasMorePage && stat.CutPerPage;
             Graphics cv = e.Graphics;
             SizeF byReso = new SizeF(stat.picFrm.Width / stat.picFrm.HorizontalResolution, stat.picFrm.Height / stat.picFrm.VerticalResolution);
             cv.PageUnit = GraphicsUnit.Inch;
