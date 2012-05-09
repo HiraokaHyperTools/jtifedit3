@@ -101,11 +101,11 @@
             // 
             this.tsc.ContentPanel.Controls.Add(this.vsc);
             this.tsc.ContentPanel.Controls.Add(this.tlpExifCut);
-            this.tsc.ContentPanel.Size = new System.Drawing.Size(789, 440);
+            this.tsc.ContentPanel.Size = new System.Drawing.Size(947, 440);
             this.tsc.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tsc.Location = new System.Drawing.Point(0, 0);
             this.tsc.Name = "tsc";
-            this.tsc.Size = new System.Drawing.Size(789, 522);
+            this.tsc.Size = new System.Drawing.Size(947, 522);
             this.tsc.TabIndex = 0;
             this.tsc.Text = "toolStripContainer1";
             // 
@@ -121,7 +121,7 @@
             this.tssl});
             this.ss.Location = new System.Drawing.Point(0, 0);
             this.ss.Name = "ss";
-            this.ss.Size = new System.Drawing.Size(789, 22);
+            this.ss.Size = new System.Drawing.Size(947, 22);
             this.ss.TabIndex = 0;
             this.ss.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ss_ItemClicked);
             // 
@@ -148,7 +148,7 @@
             // vsc.Panel2
             // 
             this.vsc.Panel2.Controls.Add(this.panel1);
-            this.vsc.Size = new System.Drawing.Size(789, 414);
+            this.vsc.Size = new System.Drawing.Size(947, 414);
             this.vsc.SplitterDistance = 262;
             this.vsc.SplitterWidth = 6;
             this.vsc.TabIndex = 0;
@@ -207,7 +207,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(519, 412);
+            this.panel1.Size = new System.Drawing.Size(677, 412);
             this.panel1.TabIndex = 2;
             this.panel1.TabStop = true;
             // 
@@ -218,7 +218,7 @@
             this.pvw.Location = new System.Drawing.Point(0, 0);
             this.pvw.Name = "pvw";
             this.pvw.Pic = null;
-            this.pvw.Size = new System.Drawing.Size(519, 412);
+            this.pvw.Size = new System.Drawing.Size(677, 412);
             this.pvw.TabIndex = 0;
             this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
             // 
@@ -242,7 +242,7 @@
             this.tlpExifCut.Name = "tlpExifCut";
             this.tlpExifCut.RowCount = 1;
             this.tlpExifCut.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpExifCut.Size = new System.Drawing.Size(789, 26);
+            this.tlpExifCut.Size = new System.Drawing.Size(947, 26);
             this.tlpExifCut.TabIndex = 6;
             this.tlpExifCut.Visible = false;
             // 
@@ -251,7 +251,7 @@
             this.bHideExifCut.FlatAppearance.BorderSize = 0;
             this.bHideExifCut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bHideExifCut.Image = global::jtifedit3.Properties.Resources.DeleteHS;
-            this.bHideExifCut.Location = new System.Drawing.Point(766, 3);
+            this.bHideExifCut.Location = new System.Drawing.Point(924, 3);
             this.bHideExifCut.Name = "bHideExifCut";
             this.bHideExifCut.Size = new System.Drawing.Size(20, 20);
             this.bHideExifCut.TabIndex = 3;
@@ -315,7 +315,7 @@
             this.bAbout});
             this.tstop.Location = new System.Drawing.Point(3, 0);
             this.tstop.Name = "tstop";
-            this.tstop.Size = new System.Drawing.Size(786, 35);
+            this.tstop.Size = new System.Drawing.Size(845, 35);
             this.tstop.TabIndex = 0;
             // 
             // bNew
@@ -618,10 +618,11 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(789, 522);
+            this.ClientSize = new System.Drawing.Size(947, 522);
             this.Controls.Add(this.tsc);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "JForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "J TIFF Editor 3";
             this.Load += new System.EventHandler(this.JForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.JForm_DragDrop);

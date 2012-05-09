@@ -8,13 +8,15 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.11"
-!define APPVER "1_0_11"
+!define VER    "1.0.13"
+!define APPVER "1_0_13"
 
 !define MIME "image/tiff"
 
 !define EXT ".tif"
 !define EXT2 ".tiff"
+
+; bin\x86\release
 
 ;--------------------------------
 
