@@ -12,7 +12,7 @@ namespace jtifedit3 {
         static void Main(String[] args) {
             String fp = null;
             foreach (String a in args) {
-                if (fp==null&&File.Exists(a)) {
+                if (fp == null && File.Exists(a)) {
                     fp = a;
                 }
             }
