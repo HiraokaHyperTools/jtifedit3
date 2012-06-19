@@ -988,11 +988,15 @@ namespace jtifedit3 {
 
         private void bMSPaint_Click(object sender, EventArgs e) {
             for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
-                String fp = Path.GetTempFileName() + ".tif";
                 FIBITMAP dib = tv.Picts[x].Picture;
+                bool isMono = (FreeImage.GetBPP(dib) == 1);
+                String fp = Path.GetTempFileName() + (isMono ? ".bmp" : ".png");
                 uint rx = FreeImage.GetResolutionX(dib);
                 uint ry = FreeImage.GetResolutionY(dib);
-                FreeImage.Save(FREE_IMAGE_FORMAT.FIF_TIFF, dib, fp, (FreeImage.GetBPP(dib) == 1) ? FREE_IMAGE_SAVE_FLAGS.TIFF_CCITTFAX4 : FREE_IMAGE_SAVE_FLAGS.TIFF_LZW);
+                if (isMono)
+                    FreeImage.Save(FREE_IMAGE_FORMAT.FIF_BMP, dib, fp, FREE_IMAGE_SAVE_FLAGS.BMP_SAVE_RLE);
+                else
+                    FreeImage.Save(FREE_IMAGE_FORMAT.FIF_PNG, dib, fp, FREE_IMAGE_SAVE_FLAGS.PNG_Z_DEFAULT_COMPRESSION);
                 using (EdForm form = new EdForm(fp)) {
                     while (true) {
                         try {
@@ -1004,7 +1008,9 @@ namespace jtifedit3 {
                         }
                         switch (form.ShowDialog()) {
                             case DialogResult.OK: {
-                                    FIBITMAP dibNew = FreeImage.Load(FREE_IMAGE_FORMAT.FIF_TIFF, fp, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
+                                    FIBITMAP dibNew = isMono
+                                        ? FreeImage.Load(FREE_IMAGE_FORMAT.FIF_BMP, fp, FREE_IMAGE_LOAD_FLAGS.DEFAULT)
+                                        : FreeImage.Load(FREE_IMAGE_FORMAT.FIF_PNG, fp, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
                                     FreeImage.SetResolutionX(dibNew, rx);
                                     FreeImage.SetResolutionY(dibNew, ry);
                                     tv.Picts[x].Picture = dibNew;
