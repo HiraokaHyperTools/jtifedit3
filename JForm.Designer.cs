@@ -313,9 +313,10 @@
             this.bDelp,
             this.toolStripSeparator7,
             this.bAbout});
-            this.tstop.Location = new System.Drawing.Point(3, 0);
+            this.tstop.Location = new System.Drawing.Point(0, 0);
             this.tstop.Name = "tstop";
-            this.tstop.Size = new System.Drawing.Size(944, 41);
+            this.tstop.Size = new System.Drawing.Size(947, 41);
+            this.tstop.Stretch = true;
             this.tstop.TabIndex = 0;
             // 
             // bNew
@@ -507,9 +508,10 @@
             this.bzoomOut,
             this.toolStripSeparator5,
             this.bShowPreView});
-            this.tsvis.Location = new System.Drawing.Point(3, 41);
+            this.tsvis.Location = new System.Drawing.Point(0, 41);
             this.tsvis.Name = "tsvis";
-            this.tsvis.Size = new System.Drawing.Size(397, 26);
+            this.tsvis.Size = new System.Drawing.Size(947, 26);
+            this.tsvis.Stretch = true;
             this.tsvis.TabIndex = 1;
             // 
             // toolStripLabel1
@@ -624,6 +626,7 @@
             this.Name = "JForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "J TIFF Editor 3";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.JForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.JForm_DragDrop);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.JForm_FormClosed);
