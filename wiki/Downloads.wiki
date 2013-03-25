@@ -1,4 +1,4 @@
 #summary J TIFF Editor 3を入手する
 こちらから J TIFF Editor 3 の最新版を入手できます：
 
-http://jtifedit3.googlecode.com/files/Setup_jtifedit3_1_0_15_user.exe
+http://jtifedit3.googlecode.com/files/Setup_jtifedit3_1_0_16_user.exe
