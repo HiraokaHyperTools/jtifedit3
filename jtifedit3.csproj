@@ -62,6 +62,12 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DPIForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DPIForm.Designer.cs">
+      <DependentUpon>DPIForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EdForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +110,10 @@
     <EmbeddedResource Include="AboutForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DPIForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DPIForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EdForm.resx">
       <SubType>Designer</SubType>
@@ -196,6 +206,7 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\RulerHS.png" />
     <None Include="app.config" />
     <None Include="Resources\PrintSetupHS.png" />
     <None Include="Resources\PrintHS.png" />
