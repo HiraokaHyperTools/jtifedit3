@@ -460,23 +460,47 @@ namespace jtifedit3 {
                         foreach (String fp in alfp) {
                             String fpOpen = TFUt.FilterUnsafeTIFFTags(fp, tempfp);
                             FREE_IMAGE_FORMAT fmt = FREE_IMAGE_FORMAT.FIF_UNKNOWN;
-                            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
-                            try {
-                                int cnt = FreeImage.GetPageCount(tif);
-                                for (int i = 0; i < cnt; i++) {
-                                    FIBITMAP fib = FreeImage.LockPage(tif, i);
-                                    try {
-                                        tv.Picts.Insert(iAt, new TvPict(FreeImage.Clone(fib)));
-                                        iAt++;
-                                        cntAdded++;
+                            fmt = FreeImage.GetFileType(fpOpen, 0);
+                            switch (fmt) {
+                                case FREE_IMAGE_FORMAT.FIF_TIFF:
+                                case FREE_IMAGE_FORMAT.FIF_MNG:
+                                case FREE_IMAGE_FORMAT.FIF_GIF: {
+                                        FIMULTIBITMAP tif = FreeImage.OpenMultiBitmapEx(fpOpen, ref fmt, FREE_IMAGE_LOAD_FLAGS.DEFAULT, false, true, false);
+                                        try {
+                                            int cnt = FreeImage.GetPageCount(tif);
+                                            for (int i = 0; i < cnt; i++) {
+                                                FIBITMAP fib = FreeImage.LockPage(tif, i);
+                                                if (!fib.IsNull) {
+                                                    try {
+                                                        tv.Picts.Insert(iAt, new TvPict(FreeImage.Clone(fib)));
+                                                        iAt++;
+                                                        cntAdded++;
+                                                    }
+                                                    finally {
+                                                        FreeImage.UnlockPage(tif, fib, false);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        finally {
+                                            FreeImage.CloseMultiBitmapEx(ref tif);
+                                        }
+                                        break;
                                     }
-                                    finally {
-                                        FreeImage.UnlockPage(tif, fib, false);
+                                default: {
+                                        FIBITMAP tif = FreeImage.Load(fmt, fpOpen, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
+                                        try {
+                                            if (!tif.IsNull) {
+                                                tv.Picts.Insert(iAt, new TvPict(FreeImage.Clone(tif)));
+                                                iAt++;
+                                                cntAdded++;
+                                            }
+                                        }
+                                        finally {
+                                            FreeImage.UnloadEx(ref tif);
+                                        }
+                                        break;
                                     }
-                                }
-                            }
-                            finally {
-                                FreeImage.CloseMultiBitmapEx(ref tif);
                             }
                         }
                     }
@@ -732,19 +756,11 @@ namespace jtifedit3 {
                 fp = sfdPict.FileName;
             }
 
-            String fpbak = Path.ChangeExtension(fp, ".bak");
+            FileAttributes att = fpatt;
 
-            try {
-                File.Copy(fp, fpbak, true);
-            }
-            catch (Exception) {
+            String fpTmp = tempfp.GetTempFileName() + ".tif";
 
-            }
-
-            bool fSamefp = (fp == Currentfp);
-            FileAttributes att = fSamefp ? fpatt : FileAttributes.Normal;
-
-            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmap(FREE_IMAGE_FORMAT.FIF_TIFF, fp, true, false, false, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
+            FIMULTIBITMAP tif = FreeImage.OpenMultiBitmap(FREE_IMAGE_FORMAT.FIF_TIFF, fpTmp, true, false, false, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
             try {
                 for (int x = 0; x < tv.Picts.Count; x++) {
                     FIBITMAP dib = tv.Picts[x].Picture;
@@ -768,24 +784,33 @@ namespace jtifedit3 {
 
                     FreeImage.AppendPage(tif, dib);
                 }
+                if (!FreeImage.CloseMultiBitmapEx(ref tif, FREE_IMAGE_SAVE_FLAGS.DEFAULT)) {
+                    tif.SetNull();
+                    MessageBox.Show(this, "保存に失敗しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+                while (true) {
+                    try {
+                        if (File.Exists(fp))
+                            File.SetAttributes(fp, FileAttributes.Normal);
+                        File.Copy(fpTmp, fp, true);
+                        break;
+                    }
+                    catch (Exception err) {
+                        DialogResult res = MessageBox.Show(this, "保存に失敗しました。\n\n" + err.Message, Application.ProductName, MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+                        if (res == DialogResult.Cancel) return false;
+                    }
+                }
+
+                File.SetAttributes(fp, att & (FileAttributes.System | FileAttributes.Hidden) | FileAttributes.Archive);
+
                 Currentfp = fp;
                 Modified = false;
                 ReadOnly = false;
-
-                if (File.Exists(fpbak)) {
-                    try {
-                        File.Delete(fpbak);
-                    }
-                    catch (Exception) {
-
-                    }
-                }
             }
             finally {
                 FreeImage.CloseMultiBitmap(tif, FREE_IMAGE_SAVE_FLAGS.DEFAULT);
             }
-
-            if (fSamefp) File.SetAttributes(fp, att & (FileAttributes.System | FileAttributes.Hidden) | FileAttributes.Archive);
 
             return true;
         }
@@ -1245,6 +1270,44 @@ namespace jtifedit3 {
         private void bPageSetting_Click(object sender, EventArgs e) {
             using (PageSetForm form = new PageSetForm())
                 form.ShowDialog(this);
+        }
+
+        private void bNewDPI_Click(object sender, EventArgs e) {
+            uint rx = 0, ry = 0;
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; x++) {
+                FIBITMAP dib = tv.Picts[x].Picture;
+                if (x == tv.SelFirst) {
+                    rx = FreeImage.GetResolutionX(dib);
+                    ry = FreeImage.GetResolutionY(dib);
+
+                    using (DPIForm form = new DPIForm(new Size(Convert.ToInt32(FreeImage.GetWidth(dib)), Convert.ToInt32(FreeImage.GetHeight(dib))), rx, ry)) {
+                        if (form.ShowDialog() != DialogResult.OK)
+                            return;
+
+                        if (form.Res is DPIForm.ForceDPI) {
+                            DPIForm.ForceDPI p = (DPIForm.ForceDPI)form.Res;
+
+                            tv.Picts[x].SetDPI(p.rx, p.ry);
+                            tv.Picts.ResetItem(x);
+                        }
+                        else if (form.Res is DPIForm.SameDPI) {
+                            DPIForm.SameDPI p = (DPIForm.SameDPI)form.Res;
+
+                            FIBITMAP frm = tv.Picts[x].Picture;
+                            uint bpp = FreeImage.GetBPP(frm);
+                            FIBITMAP fib = FreeImage.Rescale(frm, p.npx, p.npy, FREE_IMAGE_FILTER.FILTER_BOX);
+                            if (bpp == 1) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE, true);
+                            if (bpp == 4) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP, true);
+                            if (bpp == 8) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP, true);
+                            uint dpi = (uint)p.dpi;
+                            tv.Picts[x].Picture = fib;
+                            tv.Picts[x].SetDPI(dpi, dpi);
+                            tv.Picts.ResetItem(x);
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
 }

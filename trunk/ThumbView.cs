@@ -827,8 +827,9 @@ namespace jtifedit3 {
             }
 
             public Bitmap GetThumbnail(Size size) {
-                if (size.IsEmpty)
+                if (size.IsEmpty) {
                     size = new Size(Convert.ToInt32(FreeImage.GetWidth(parent.fib)), Convert.ToInt32(FreeImage.GetHeight(parent.fib)));
+                }
                 return GetThumbnail(size.Width, size.Height);
             }
 
@@ -840,7 +841,17 @@ namespace jtifedit3 {
                 }
                 else {
                     FIBITMAP fib = parent.fib;
-                    Rectangle rc = FitRect3.Fit(new Rectangle(0, 0, cx, cy), new Size(Convert.ToInt32(FreeImage.GetWidth(fib)), Convert.ToInt32(FreeImage.GetHeight(fib))));
+                    float rx = FreeImage.GetResolutionX(fib);
+                    float ry = FreeImage.GetResolutionY(fib);
+                    if (rx > ry) {
+                        rx /= ry;
+                        ry = 1;
+                    }
+                    else {
+                        ry /= rx;
+                        rx = 1;
+                    }
+                    Rectangle rc = FitRect3.Fit(new Rectangle(0, 0, cx, cy), new Size(Convert.ToInt32(FreeImage.GetWidth(fib) / rx), Convert.ToInt32(FreeImage.GetHeight(fib) / ry)));
                     FIBITMAP dib = FreeImage.Rescale(fib, rc.Width, rc.Height, FREE_IMAGE_FILTER.FILTER_BOX);
                     try {
                         return dict[key] = FreeImage.GetBitmap(dib);
@@ -879,6 +890,15 @@ namespace jtifedit3 {
             FIBITMAP fibNew = FreeImage.Clone(fib);
             FreeImage.Invert(fibNew);
             Picture = fibNew;
+        }
+
+        public void SetDPI(uint rx, uint ry) {
+            if (PictureChanging != null) PictureChanging(this, new EventArgs());
+
+            FreeImage.SetResolutionX(fib, rx);
+            FreeImage.SetResolutionY(fib, ry);
+
+            if (PictureChanged != null) PictureChanged(this, new EventArgs());
         }
     }
 }

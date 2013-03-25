@@ -45,16 +45,7 @@ namespace jtifedit3 {
         }
 
         public static RectangleF FitF(RectangleF rcClip, SizeF sizePic) {
-            if (sizePic.Width <= rcClip.Width && sizePic.Height <= rcClip.Height) {
-                // 中央寄せ
-                return new RectangleF(
-                    rcClip.Left + (rcClip.Width - sizePic.Width) / 2,
-                    rcClip.Top + (rcClip.Height - sizePic.Height) / 2,
-                    sizePic.Width,
-                    sizePic.Height
-                    );
-            }
-            else {
+            {
                 // 縮小
                 float fClip = (float)rcClip.Width / Math.Max(1, rcClip.Height);
                 float fPic = (float)sizePic.Width / Math.Max(1, sizePic.Height);
