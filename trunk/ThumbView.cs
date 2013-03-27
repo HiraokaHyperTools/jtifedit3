@@ -802,7 +802,12 @@ namespace jtifedit3 {
         }
 
         public void Rotate(bool fr) {
-            Picture = FreeImage.Rotate(fib, fr ? -90 : 90);
+            uint rx0 = FreeImage.GetResolutionX(fib);
+            uint ry0 = FreeImage.GetResolutionY(fib);
+            FIBITMAP fib2 = FreeImage.Rotate(fib, fr ? -90 : 90);
+            FreeImage.SetResolutionX(fib2, ry0);
+            FreeImage.SetResolutionY(fib2, rx0);
+            Picture = fib2;
         }
 
         public event EventHandler PictureChanging, PictureChanged;
