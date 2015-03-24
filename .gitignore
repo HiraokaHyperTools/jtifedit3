@@ -1,0 +1,5 @@
+bin
+obj
+*.suo
+*.user
+/Setup_jtifedit3_*_*_*_user.exe

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jtifedit3", "jtifedit3.csproj", "{2912E630-8EF8-417B-8BEC-8F3A9AE87C74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jtifedit3", "jtifedit3\jtifedit3.csproj", "{2912E630-8EF8-417B-8BEC-8F3A9AE87C74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HIRAOKA HYPERS TOOLS, Inc.")]
 [assembly: AssemblyProduct("J TIFF Editor 3")]
-[assembly: AssemblyCopyright("Copyright (C) 2011,2013")]
+[assembly: AssemblyCopyright("Copyright (C) 2011,2013,2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly:     AssemblyVersion("1.0.17.0")] // here
-[assembly: AssemblyFileVersion("1.0.17.0")] // here
+[assembly:     AssemblyVersion("1.0.18.0")] // here
+[assembly: AssemblyFileVersion("1.0.18.0")] // here

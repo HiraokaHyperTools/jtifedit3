@@ -8,8 +8,8 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.17"
-!define APPVER "1_0_17"
+!define VER    "1.0.18"
+!searchreplace APV ${VER} "." "_"
 
 !define MIME "image/tiff"
 
@@ -24,7 +24,7 @@
 Name "${TITLE} -- ${VER}"
 
 ; The file to write
-OutFile "Setup_${APP}_${APPVER}_user.exe"
+OutFile "Setup_${APP}_${APV}_user.exe"
 
 ; The default installation directory
 InstallDir "$APPDATA\${APP}"
@@ -96,12 +96,12 @@ Section "${APP}" ;No components page, name is not important
   !insertmacro CheckDotNET ${DOTNET_VERSION}
 
   ; Put file there
-  File "bin\x86\release\jtifedit3.exe"
-  File "bin\x86\release\jtifedit3.pdb"
-  File ".\MAPISendMailSa.exe"
-  File ".\FreeImage.dll"
-  File ".\FreeImageNET.dll"
-  File "1.ico"
+  File "jtifedit3\bin\x86\release\jtifedit3.exe"
+  File "jtifedit3\bin\x86\release\jtifedit3.pdb"
+  File "jtifedit3\MAPISendMailSa.exe"
+  File "jtifedit3\FreeImage.dll"
+  File "jtifedit3\FreeImageNET.dll"
+  File "jtifedit3\1.ico"
 
   WriteRegStr HKCU "Software\Classes\${APP}" "" "${TITLE}"
   WriteRegstr HKCU "Software\Classes\${APP}\DefaultIcon" "" "$INSTDIR\1.ico,0"
@@ -127,13 +127,8 @@ Section "関連付け(現在のアカウント)"
   WriteRegStr HKCU "Software\Classes\${EXT2}" "Content Type" "${MIME}"
   WriteRegStr HKCU "Software\Classes\${EXT2}\OpenWithProgids" "${APP}" ""
 
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT}" ""
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT}" "Progid"
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT}" "Application"
-
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT2}" ""
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT2}" "Progid"
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT2}" "Application"
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT}\UserChoice"
+  DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT2}\UserChoice"
 
   DetailPrint "関連付け更新中です。お待ちください。"
   !insertmacro UPDATEFILEASSOC

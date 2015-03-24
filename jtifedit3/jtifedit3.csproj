@@ -194,7 +194,6 @@
     <None Include="Resources\DeleteHS.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FreeImage.NET.chm" />
     <None Include="Resources\Information.bmp" />
   </ItemGroup>
   <ItemGroup>
