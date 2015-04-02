@@ -73,6 +73,7 @@ namespace jtifedit3 {
                     Modified = false;
                     ExifCut = false;
                     ReadOnly = false;
+                    tlpDPIWarn.Visible = false;
                     break;
             }
         }
@@ -228,12 +229,28 @@ namespace jtifedit3 {
                         FreeImage.UnlockPage(tif, fib, false);
                     }
                 }
+                CheckXYRes();
                 Currentfp = fp;
                 Modified = false;
             }
             finally {
                 FreeImage.CloseMultiBitmapEx(ref tif);
             }
+        }
+
+        private void CheckXYRes() {
+            tlpDPIWarn.Visible = TestXYRes();
+        }
+
+        bool TestXYRes() {
+            bool any = false;
+            foreach (TvPict t in tv.Picts) {
+                FIBITMAP fib = t.Picture;
+                uint h = FreeImage.GetResolutionX(fib);
+                uint v = FreeImage.GetResolutionY(fib);
+                any = h != 0 && v != 0 && h != v;
+            }
+            return any;
         }
 
         private void tv_SelChanged(object sender, EventArgs e) {
@@ -504,6 +521,9 @@ namespace jtifedit3 {
                             }
                         }
                     }
+                    if (cntAdded != 0) {
+                        CheckXYRes();
+                    }
                     return;
                 }
                 else {
@@ -554,6 +574,9 @@ namespace jtifedit3 {
                     }
                 }
 
+                if (cntAdded != 0) {
+                    CheckXYRes();
+                }
                 if (forceAppend && cntAdded != 0) {
                     MessageBox.Show(this, cntAdded + "ページ、最後に" + (isCopy ? "追加" : "移動") + "しました。", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1171,6 +1194,19 @@ namespace jtifedit3 {
         }
 
         private void bPrint_Click(object sender, EventArgs e) {
+            if (TestXYRes()) {
+                switch (MessageBox.Show(this, "縦と横の解像度が異なる画像が有ります。印刷に問題が出るかもしれません。\n\n先に修正しますか。", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)) {
+                    case DialogResult.Yes:
+                        FixDPI();
+                        CheckXYRes();
+                        break;
+                    case DialogResult.No:
+                        break;
+                    default:
+                        return;
+                }
+            }
+
             pGo.PrinterSettings.FromPage = 1 + tv.SelFirst;
             pGo.PrinterSettings.ToPage = 1 + tv.SelLast;
             pGo.PrinterSettings.MinimumPage = 1;
@@ -1305,6 +1341,57 @@ namespace jtifedit3 {
                             tv.Picts.ResetItem(x);
                         }
                         break;
+                    }
+                }
+            }
+        }
+
+        private void bHideDPIWarn_Click(object sender, EventArgs e) {
+            tlpDPIWarn.Hide();
+        }
+
+        private void llFixDPI_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            FixDPI();
+
+            CheckXYRes();
+        }
+
+        private void FixDPI() {
+            foreach (TvPict t in tv.Picts) {
+                FIBITMAP frm = t.Picture;
+                uint h = FreeImage.GetResolutionX(frm);
+                uint v = FreeImage.GetResolutionY(frm);
+                if (h != 0 && v != 0 && h != v) {
+                    uint min = Math.Min(h, v);
+                    uint max = Math.Max(h, v);
+                    uint new1 = 0;
+                    if (false) { }
+                    else if (max == 203 && min == 97) new1 = 200;
+                    else if (max == 203 && min == 98) new1 = 200;
+                    else if (max == 203 && min == 196) new1 = 200;
+                    else if (max == 391 && min == 203) new1 = 400;
+                    else if (max == 392 && min == 203) new1 = 400;
+                    else if (max <= 200) new1 = 200;
+                    else if (max <= 300) new1 = 300;
+                    else if (max <= 400) new1 = 400;
+                    else if (max <= 500) new1 = 500;
+                    else if (max <= 600) new1 = 600;
+                    else new1 = max;
+
+                    if (new1 != 0) {
+                        uint bpp = FreeImage.GetBPP(frm);
+                        uint dpi = (uint)new1;
+                        uint rx = h;
+                        uint ry = v;
+                        int npx = (int)((FreeImage.GetWidth(frm) * dpi) / rx);
+                        int npy = (int)((FreeImage.GetHeight(frm) * dpi) / ry);
+                        FIBITMAP fib = FreeImage.Rescale(frm, npx, npy, FREE_IMAGE_FILTER.FILTER_BOX);
+                        if (bpp == 1) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE, true);
+                        if (bpp == 4) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP, true);
+                        if (bpp == 8) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP, true);
+                        t.Picture = fib;
+                        t.SetDPI(dpi, dpi);
+                        tv.Picts.ResetItem(tv.Picts.IndexOf(t));
                     }
                 }
             }
