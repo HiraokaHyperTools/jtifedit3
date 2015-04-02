@@ -8,7 +8,7 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.18"
+!define VER    "1.0.19"
 !searchreplace APV ${VER} "." "_"
 
 !define MIME "image/tiff"
