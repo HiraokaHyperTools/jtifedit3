@@ -265,11 +265,91 @@ namespace jtifedit3 {
                 tssl.Text = String.Format("ページ{0:#,##0}～{1:#,##0}を選択。(ページ数{2:#,##0})", 1 + tv.SelFirst, 1 + tv.SelLast, c);
             }
 
+            String mets = "";
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; x++) {
+                FIBITMAP dib = tv.Picts[x].Picture;
+                if (mets.Length != 0)
+                    mets += ", ";
+                mets += UtPS.GuessPageSize(dib, true) ?? "?";
+            }
+            if (mets.Length != 0) tssl.Text += " [" + mets + "]";
+
             if (c == 0) {
                 pvw.Pic = null;
             }
             else {
                 pvw.Pic = tv.Picts[tv.Sel2].DefTumbGen.GetThumbnail(Size.Empty);
+            }
+        }
+
+        class UtPS {
+            class P1 {
+                public int cx, cy;
+                public String a;
+
+                public P1(String a, int cx, int cy) {
+                    this.a = a;
+                    this.cx = cx;
+                    this.cy = cy;
+                }
+            }
+
+            static P1[] sizes = new P1[] {
+                new P1("4A0",1682,2378),
+                new P1("2A0",1189,1682),
+                new P1("A0", 841,1189),
+                new P1("A1", 594, 841),
+                new P1("A2", 420, 594),
+                new P1("A3", 297, 420),
+                new P1("A4", 210, 297),
+                new P1("A5", 148, 210),
+                new P1("A6", 105, 148),
+                
+                new P1("JIS B3", 364, 515),
+                new P1("JIS B4", 257, 364),
+                new P1("JIS B5", 182, 257),
+
+                new P1("ISO B3", 353, 500),
+                new P1("ISO B4", 250, 353),
+                new P1("ISO B5", 176, 250),
+
+                new P1("C3", 324, 458),
+                new P1("C4", 229, 324),
+                new P1("C5", 162, 229),
+
+                new P1("はがき",  99, 148),
+
+                new P1("L",  89, 127),
+                new P1("2L",  127, 178),
+
+                new P1("Letter", 216, 279),
+                new P1("Folio", 210, 330),
+            };
+
+            public static String GuessPageSize(FIBITMAP dib, bool usemm) {
+                uint dpix = FreeImage.GetResolutionX(dib);
+                uint dpiy = FreeImage.GetResolutionY(dib);
+                uint cx = FreeImage.GetWidth(dib);
+                uint cy = FreeImage.GetHeight(dib);
+
+                if (cx > 0 && cy > 0 && dpix > 0 && dpiy > 0) {
+                    float lx = cx / (float)dpix * 25.4f;
+                    float ly = cy / (float)dpiy * 25.4f;
+
+                    foreach (P1 p1 in sizes) {
+                        if (Isit(lx, ly, p1.cx, p1.cy)) return p1.a + "縦";
+                        if (Isit(lx, ly, p1.cy, p1.cx)) return p1.a + "横";
+                    }
+
+                    if (usemm) return String.Format("{0:0} x {1:0}", lx, ly);
+                }
+
+                return null;
+            }
+
+            static bool Isit(float lx, float ly, float tx, float ty) {
+                float f = 2;
+                return Math.Abs(lx - tx) < f && Math.Abs(ly - ty) < f;
             }
         }
 
@@ -1396,5 +1476,27 @@ namespace jtifedit3 {
                 }
             }
         }
+
+
+        private void Add1(int cx, int cy) {
+            int y = tv.SelFirst + 1;
+            if (y < 0) y = 0;
+            FIBITMAP fib = FreeImage.AllocateEx(cx, cy, 1, new RGBQUAD(Color.White), FREE_IMAGE_COLOR_OPTIONS.FICO_DEFAULT, new RGBQUAD[] {
+                new RGBQUAD(Color.Black),
+                new RGBQUAD(Color.White),
+            });
+            FreeImage.SetResolutionX(fib, 300);
+            FreeImage.SetResolutionY(fib, 300);
+            tv.Picts.Insert(y, new TvPict(fib));
+            tv.SSel = y;
+        }
+
+        private void bA3P300_Click(object sender, EventArgs e) { Add1(3504, 4960); }
+        private void bA4P300_Click(object sender, EventArgs e) { Add1(2480, 3504); }
+
+        private void bB4P300_Click(object sender, EventArgs e) { Add1(3024, 4288); }
+        private void bB5P300_Click(object sender, EventArgs e) { Add1(2144, 3024); }
+
+        private void bJapanesePostCard300_Click(object sender, EventArgs e) { Add1(1168, 1744); }
     }
 }

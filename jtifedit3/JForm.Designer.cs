@@ -32,16 +32,15 @@
             System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(JForm));
             this.tsc = new System.Windows.Forms.ToolStripContainer();
             this.ss = new System.Windows.Forms.StatusStrip();
             this.tssl = new System.Windows.Forms.ToolStripStatusLabel();
             this.vsc = new System.Windows.Forms.SplitContainer();
-            this.tv = new jtifedit3.ThumbView();
             this.labelVSep = new System.Windows.Forms.Label();
             this.bAppend = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pvw = new jtifedit3.PreViewer();
             this.tlpDPIWarn = new System.Windows.Forms.TableLayoutPanel();
             this.bHideDPIWarn = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -67,6 +66,12 @@
             this.bMailSel = new System.Windows.Forms.ToolStripMenuItem();
             this.bMailContents = new System.Windows.Forms.ToolStripMenuItem();
             this.bDelp = new System.Windows.Forms.ToolStripButton();
+            this.bAddBlank = new System.Windows.Forms.ToolStripDropDownButton();
+            this.bA3P300 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bA4P300 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bB4P300 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bB5P300 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bJapanesePostCard300 = new System.Windows.Forms.ToolStripMenuItem();
             this.bAbout = new System.Windows.Forms.ToolStripButton();
             this.tsvis = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -82,6 +87,8 @@
             this.ofdAppend = new System.Windows.Forms.OpenFileDialog();
             this.pGo = new System.Windows.Forms.PrintDialog();
             this.pDocGo = new System.Drawing.Printing.PrintDocument();
+            this.tv = new jtifedit3.ThumbView();
+            this.pvw = new jtifedit3.PreViewer();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -90,6 +97,7 @@
             toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.tsc.BottomToolStripPanel.SuspendLayout();
             this.tsc.ContentPanel.SuspendLayout();
             this.tsc.TopToolStripPanel.SuspendLayout();
@@ -146,6 +154,11 @@
             // 
             toolStripSeparator10.Name = "toolStripSeparator10";
             toolStripSeparator10.Size = new System.Drawing.Size(6, 38);
+            // 
+            // toolStripSeparator11
+            // 
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new System.Drawing.Size(6, 38);
             // 
             // tsc
             // 
@@ -211,28 +224,6 @@
             this.vsc.SplitterWidth = 6;
             this.vsc.TabIndex = 0;
             // 
-            // tv
-            // 
-            this.tv.AllowDrop = true;
-            this.tv.AutoScroll = true;
-            this.tv.BackColor = System.Drawing.Color.Transparent;
-            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tv.Location = new System.Drawing.Point(0, 0);
-            this.tv.Name = "tv";
-            this.tv.Picts = null;
-            this.tv.Sel2 = -1;
-            this.tv.Size = new System.Drawing.Size(260, 332);
-            this.tv.SSel = -1;
-            this.tv.TabIndex = 2;
-            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
-            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
-            this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
-            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
-            this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
-            this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
-            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
-            this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
-            // 
             // labelVSep
             // 
             this.labelVSep.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -268,17 +259,6 @@
             this.panel1.Size = new System.Drawing.Size(677, 383);
             this.panel1.TabIndex = 2;
             this.panel1.TabStop = true;
-            // 
-            // pvw
-            // 
-            this.pvw.AutoScroll = true;
-            this.pvw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pvw.Location = new System.Drawing.Point(0, 0);
-            this.pvw.Name = "pvw";
-            this.pvw.Pic = null;
-            this.pvw.Size = new System.Drawing.Size(677, 383);
-            this.pvw.TabIndex = 0;
-            this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
             // 
             // tlpDPIWarn
             // 
@@ -432,6 +412,8 @@
             this.bMail,
             toolStripSeparator6,
             this.bDelp,
+            toolStripSeparator11,
+            this.bAddBlank,
             toolStripSeparator7,
             this.bAbout});
             this.tstop.Location = new System.Drawing.Point(0, 0);
@@ -586,6 +568,56 @@
             this.bDelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bDelp.Click += new System.EventHandler(this.bDelp_Click);
             // 
+            // bAddBlank
+            // 
+            this.bAddBlank.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bA3P300,
+            this.bA4P300,
+            this.bB4P300,
+            this.bB5P300,
+            this.bJapanesePostCard300});
+            this.bAddBlank.Image = global::jtifedit3.Properties.Resources.DocumentHS;
+            this.bAddBlank.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bAddBlank.Name = "bAddBlank";
+            this.bAddBlank.Size = new System.Drawing.Size(68, 35);
+            this.bAddBlank.Text = "白紙追加";
+            this.bAddBlank.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // bA3P300
+            // 
+            this.bA3P300.Name = "bA3P300";
+            this.bA3P300.Size = new System.Drawing.Size(165, 22);
+            this.bA3P300.Text = "A3縦 300dpi";
+            this.bA3P300.Click += new System.EventHandler(this.bA3P300_Click);
+            // 
+            // bA4P300
+            // 
+            this.bA4P300.Name = "bA4P300";
+            this.bA4P300.Size = new System.Drawing.Size(165, 22);
+            this.bA4P300.Text = "A4縦 300dpi";
+            this.bA4P300.Click += new System.EventHandler(this.bA4P300_Click);
+            // 
+            // bB4P300
+            // 
+            this.bB4P300.Name = "bB4P300";
+            this.bB4P300.Size = new System.Drawing.Size(165, 22);
+            this.bB4P300.Text = "JIS B4縦 300dpi";
+            this.bB4P300.Click += new System.EventHandler(this.bB4P300_Click);
+            // 
+            // bB5P300
+            // 
+            this.bB5P300.Name = "bB5P300";
+            this.bB5P300.Size = new System.Drawing.Size(165, 22);
+            this.bB5P300.Text = "JIS B5縦 300dpi";
+            this.bB5P300.Click += new System.EventHandler(this.bB5P300_Click);
+            // 
+            // bJapanesePostCard300
+            // 
+            this.bJapanesePostCard300.Name = "bJapanesePostCard300";
+            this.bJapanesePostCard300.Size = new System.Drawing.Size(165, 22);
+            this.bJapanesePostCard300.Text = "はがき縦 300dpi";
+            this.bJapanesePostCard300.Click += new System.EventHandler(this.bJapanesePostCard300_Click);
+            // 
             // bAbout
             // 
             this.bAbout.Image = global::jtifedit3.Properties.Resources.Information;
@@ -714,6 +746,39 @@
             this.pDocGo.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler(this.pDocGo_QueryPageSettings);
             this.pDocGo.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.pDocGo_BeginPrint);
             // 
+            // tv
+            // 
+            this.tv.AllowDrop = true;
+            this.tv.AutoScroll = true;
+            this.tv.BackColor = System.Drawing.Color.Transparent;
+            this.tv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tv.Location = new System.Drawing.Point(0, 0);
+            this.tv.Name = "tv";
+            this.tv.Picts = null;
+            this.tv.Sel2 = -1;
+            this.tv.Size = new System.Drawing.Size(260, 332);
+            this.tv.SSel = -1;
+            this.tv.TabIndex = 2;
+            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
+            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
+            this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
+            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
+            this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
+            this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
+            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
+            this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+            // 
+            // pvw
+            // 
+            this.pvw.AutoScroll = true;
+            this.pvw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pvw.Location = new System.Drawing.Point(0, 0);
+            this.pvw.Name = "pvw";
+            this.pvw.Pic = null;
+            this.pvw.Size = new System.Drawing.Size(677, 383);
+            this.pvw.TabIndex = 0;
+            this.pvw.FitCnfChanged += new System.EventHandler(this.preViewer1_FitCnfChanged);
+            // 
             // JForm
             // 
             this.AllowDrop = true;
@@ -810,6 +875,12 @@
         private System.Windows.Forms.Button bHideDPIWarn;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.LinkLabel llFixDPI;
+        private System.Windows.Forms.ToolStripDropDownButton bAddBlank;
+        private System.Windows.Forms.ToolStripMenuItem bA4P300;
+        private System.Windows.Forms.ToolStripMenuItem bA3P300;
+        private System.Windows.Forms.ToolStripMenuItem bB4P300;
+        private System.Windows.Forms.ToolStripMenuItem bB5P300;
+        private System.Windows.Forms.ToolStripMenuItem bJapanesePostCard300;
     }
 }
 
