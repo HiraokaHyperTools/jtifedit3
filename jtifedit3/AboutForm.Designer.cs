@@ -106,7 +106,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::jtifedit3.Properties.Resources._1;
+            this.pictureBox1.Image = global::jtifedit3.Properties.Resources.App;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);

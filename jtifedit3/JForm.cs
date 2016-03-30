@@ -1114,11 +1114,37 @@ namespace jtifedit3 {
             }
         }
 
+        class PFUt {
+            public String Dir { get { return Environment.ExpandEnvironmentVariables("%APPDATA%\\jtifedit3\\history"); } }
+
+            public String Next(String fext) {
+                String dir = Dir;
+                Directory.CreateDirectory(dir);
+                for (int t = 1; ; t++) {
+                    String fp = dir + "\\" + DateTime.Now.ToString("yyyy年MM月dd日 HH時mm分 ") + " " + t.ToString("0000") + fext;
+                    if (File.Exists(fp)) continue;
+
+                    try {
+                        DateTime dt0 = DateTime.Now.AddMonths(-3); // 3 カ月で削除
+                        foreach (FileInfo fi in new DirectoryInfo(dir).GetFiles()) {
+                            if (fi.LastWriteTime < dt0) fi.Delete();
+                        }
+                    }
+                    catch (Exception) {
+                        // 削除失敗
+                    }
+                    return fp;
+                }
+            }
+        }
+
+        PFUt pfut = new PFUt();
+
         private void bMSPaint_Click(object sender, EventArgs e) {
             for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
                 FIBITMAP dib = tv.Picts[x].Picture;
                 bool isMono = (FreeImage.GetBPP(dib) == 1);
-                String fp = Path.GetTempFileName() + (isMono ? ".bmp" : ".png");
+                String fp = pfut.Next(isMono ? ".bmp" : ".png");
                 uint rx = FreeImage.GetResolutionX(dib);
                 uint ry = FreeImage.GetResolutionY(dib);
                 if (isMono)
@@ -1498,5 +1524,18 @@ namespace jtifedit3 {
         private void bB5P300_Click(object sender, EventArgs e) { Add1(2144, 3024); }
 
         private void bJapanesePostCard300_Click(object sender, EventArgs e) { Add1(1168, 1744); }
+
+        private void bHist_Click(object sender, EventArgs e) {
+            String dir = pfut.Dir;
+            Directory.CreateDirectory(dir);
+
+            try {
+                Process.Start(dir);
+            }
+            catch (Exception err) {
+                MessageBox.Show(this, "フォルダを表示できません。", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
     }
 }

@@ -195,6 +195,7 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\History.png" />
     <None Include="Resources\DocumentHS.png" />
     <None Include="Resources\RulerHS.png" />
     <None Include="app.config" />

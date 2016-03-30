@@ -42,15 +42,26 @@
             this.bAppend = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tlpDPIWarn = new System.Windows.Forms.TableLayoutPanel();
-            this.bHideDPIWarn = new System.Windows.Forms.Button();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.llFixDPI = new System.Windows.Forms.LinkLabel();
             this.tlpExifCut = new System.Windows.Forms.TableLayoutPanel();
-            this.bHideExifCut = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lExifCutWhat = new System.Windows.Forms.Label();
             this.tstop = new System.Windows.Forms.ToolStrip();
+            this.tsvis = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.tscRate = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.ofdPict = new System.Windows.Forms.OpenFileDialog();
+            this.mThumb = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.sfdPict = new System.Windows.Forms.SaveFileDialog();
+            this.ofdAppend = new System.Windows.Forms.OpenFileDialog();
+            this.pGo = new System.Windows.Forms.PrintDialog();
+            this.pDocGo = new System.Drawing.Printing.PrintDocument();
+            this.bHideDPIWarn = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.bHideExifCut = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bNew = new System.Windows.Forms.ToolStripButton();
             this.bOpenf = new System.Windows.Forms.ToolStripButton();
             this.bSave = new System.Windows.Forms.ToolStripButton();
@@ -60,6 +71,7 @@
             this.bNega = new System.Windows.Forms.ToolStripButton();
             this.bNewDPI = new System.Windows.Forms.ToolStripButton();
             this.bMSPaint = new System.Windows.Forms.ToolStripButton();
+            this.bHist = new System.Windows.Forms.ToolStripButton();
             this.bPrint = new System.Windows.Forms.ToolStripButton();
             this.bPageSetting = new System.Windows.Forms.ToolStripButton();
             this.bMail = new System.Windows.Forms.ToolStripDropDownButton();
@@ -73,20 +85,9 @@
             this.bB5P300 = new System.Windows.Forms.ToolStripMenuItem();
             this.bJapanesePostCard300 = new System.Windows.Forms.ToolStripMenuItem();
             this.bAbout = new System.Windows.Forms.ToolStripButton();
-            this.tsvis = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tscRate = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.bzoomIn = new System.Windows.Forms.ToolStripButton();
             this.bzoomOut = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.bShowPreView = new System.Windows.Forms.ToolStripButton();
-            this.ofdPict = new System.Windows.Forms.OpenFileDialog();
-            this.mThumb = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.sfdPict = new System.Windows.Forms.SaveFileDialog();
-            this.ofdAppend = new System.Windows.Forms.OpenFileDialog();
-            this.pGo = new System.Windows.Forms.PrintDialog();
-            this.pDocGo = new System.Drawing.Printing.PrintDocument();
             this.tv = new jtifedit3.ThumbView();
             this.pvw = new jtifedit3.PreViewer();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -108,11 +109,11 @@
             this.vsc.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tlpDPIWarn.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tlpExifCut.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tstop.SuspendLayout();
             this.tsvis.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripSeparator1
@@ -283,29 +284,6 @@
             this.tlpDPIWarn.TabIndex = 7;
             this.tlpDPIWarn.Visible = false;
             // 
-            // bHideDPIWarn
-            // 
-            this.bHideDPIWarn.FlatAppearance.BorderSize = 0;
-            this.bHideDPIWarn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bHideDPIWarn.Image = global::jtifedit3.Properties.Resources.DeleteHS;
-            this.bHideDPIWarn.Location = new System.Drawing.Point(924, 3);
-            this.bHideDPIWarn.Name = "bHideDPIWarn";
-            this.bHideDPIWarn.Size = new System.Drawing.Size(20, 20);
-            this.bHideDPIWarn.TabIndex = 3;
-            this.bHideDPIWarn.UseVisualStyleBackColor = true;
-            this.bHideDPIWarn.Click += new System.EventHandler(this.bHideDPIWarn_Click);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pictureBox2.Image = global::jtifedit3.Properties.Resources.WarningHS;
-            this.pictureBox2.Location = new System.Drawing.Point(3, 5);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(16, 16);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
-            // 
             // llFixDPI
             // 
             this.llFixDPI.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -345,29 +323,6 @@
             this.tlpExifCut.TabIndex = 6;
             this.tlpExifCut.Visible = false;
             // 
-            // bHideExifCut
-            // 
-            this.bHideExifCut.FlatAppearance.BorderSize = 0;
-            this.bHideExifCut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bHideExifCut.Image = global::jtifedit3.Properties.Resources.DeleteHS;
-            this.bHideExifCut.Location = new System.Drawing.Point(924, 3);
-            this.bHideExifCut.Name = "bHideExifCut";
-            this.bHideExifCut.Size = new System.Drawing.Size(20, 20);
-            this.bHideExifCut.TabIndex = 3;
-            this.bHideExifCut.UseVisualStyleBackColor = true;
-            this.bHideExifCut.Click += new System.EventHandler(this.bHideExifCut_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pictureBox1.Image = global::jtifedit3.Properties.Resources.WarningHS;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 5);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -405,6 +360,7 @@
             this.bNewDPI,
             toolStripSeparator8,
             this.bMSPaint,
+            this.bHist,
             toolStripSeparator3,
             this.bPrint,
             this.bPageSetting,
@@ -421,6 +377,140 @@
             this.tstop.Size = new System.Drawing.Size(947, 38);
             this.tstop.Stretch = true;
             this.tstop.TabIndex = 0;
+            // 
+            // tsvis
+            // 
+            this.tsvis.Dock = System.Windows.Forms.DockStyle.None;
+            this.tsvis.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.tscRate,
+            this.toolStripSeparator4,
+            this.bzoomIn,
+            this.bzoomOut,
+            this.toolStripSeparator5,
+            this.bShowPreView});
+            this.tsvis.Location = new System.Drawing.Point(0, 38);
+            this.tsvis.Name = "tsvis";
+            this.tsvis.Size = new System.Drawing.Size(947, 25);
+            this.tsvis.Stretch = true;
+            this.tsvis.TabIndex = 1;
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(82, 22);
+            this.toolStripLabel1.Text = "画像の大きさ：";
+            // 
+            // tscRate
+            // 
+            this.tscRate.DropDownHeight = 199;
+            this.tscRate.IntegralHeight = false;
+            this.tscRate.Items.AddRange(new object[] {
+            "頁全体",
+            "頁幅",
+            "25 %",
+            "37 %",
+            "50 %",
+            "75 %",
+            "100 %",
+            "150 %",
+            "200 %",
+            "300 %",
+            "400 %"});
+            this.tscRate.Name = "tscRate";
+            this.tscRate.Size = new System.Drawing.Size(87, 25);
+            this.tscRate.SelectedIndexChanged += new System.EventHandler(this.tscRate_SelectedIndexChanged);
+            this.tscRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tscRate_KeyDown);
+            this.tscRate.Validating += new System.ComponentModel.CancelEventHandler(this.tscRate_Validating);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // ofdPict
+            // 
+            this.ofdPict.DefaultExt = "tif";
+            this.ofdPict.Filter = "*.tif;*.tiff|*.tif;*.tiff";
+            // 
+            // mThumb
+            // 
+            this.mThumb.Name = "contextMenuStrip1";
+            this.mThumb.Size = new System.Drawing.Size(61, 4);
+            // 
+            // sfdPict
+            // 
+            this.sfdPict.DefaultExt = "tif";
+            this.sfdPict.Filter = "*.tif;*.tiff|*.tif;*.tiff";
+            // 
+            // ofdAppend
+            // 
+            this.ofdAppend.DefaultExt = "tif";
+            this.ofdAppend.Filter = "*.tif;*.tiff|*.tif;*.tiff";
+            this.ofdAppend.Multiselect = true;
+            // 
+            // pGo
+            // 
+            this.pGo.AllowSomePages = true;
+            this.pGo.Document = this.pDocGo;
+            // 
+            // pDocGo
+            // 
+            this.pDocGo.DocumentName = "図面";
+            this.pDocGo.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.pDocGo_PrintPage);
+            this.pDocGo.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler(this.pDocGo_QueryPageSettings);
+            this.pDocGo.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.pDocGo_BeginPrint);
+            // 
+            // bHideDPIWarn
+            // 
+            this.bHideDPIWarn.FlatAppearance.BorderSize = 0;
+            this.bHideDPIWarn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bHideDPIWarn.Image = global::jtifedit3.Properties.Resources.DeleteHS;
+            this.bHideDPIWarn.Location = new System.Drawing.Point(924, 3);
+            this.bHideDPIWarn.Name = "bHideDPIWarn";
+            this.bHideDPIWarn.Size = new System.Drawing.Size(20, 20);
+            this.bHideDPIWarn.TabIndex = 3;
+            this.bHideDPIWarn.UseVisualStyleBackColor = true;
+            this.bHideDPIWarn.Click += new System.EventHandler(this.bHideDPIWarn_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.pictureBox2.Image = global::jtifedit3.Properties.Resources.WarningHS;
+            this.pictureBox2.Location = new System.Drawing.Point(3, 5);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            // 
+            // bHideExifCut
+            // 
+            this.bHideExifCut.FlatAppearance.BorderSize = 0;
+            this.bHideExifCut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bHideExifCut.Image = global::jtifedit3.Properties.Resources.DeleteHS;
+            this.bHideExifCut.Location = new System.Drawing.Point(924, 3);
+            this.bHideExifCut.Name = "bHideExifCut";
+            this.bHideExifCut.Size = new System.Drawing.Size(20, 20);
+            this.bHideExifCut.TabIndex = 3;
+            this.bHideExifCut.UseVisualStyleBackColor = true;
+            this.bHideExifCut.Click += new System.EventHandler(this.bHideExifCut_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.pictureBox1.Image = global::jtifedit3.Properties.Resources.WarningHS;
+            this.pictureBox1.Location = new System.Drawing.Point(3, 5);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // bNew
             // 
@@ -511,6 +601,16 @@
             this.bMSPaint.Text = "ペイント";
             this.bMSPaint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bMSPaint.Click += new System.EventHandler(this.bMSPaint_Click);
+            // 
+            // bHist
+            // 
+            this.bHist.Image = global::jtifedit3.Properties.Resources.History;
+            this.bHist.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bHist.Name = "bHist";
+            this.bHist.Size = new System.Drawing.Size(35, 35);
+            this.bHist.Text = "履歴";
+            this.bHist.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.bHist.Click += new System.EventHandler(this.bHist_Click);
             // 
             // bPrint
             // 
@@ -628,56 +728,6 @@
             this.bAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bAbout.Click += new System.EventHandler(this.bAbout_Click);
             // 
-            // tsvis
-            // 
-            this.tsvis.Dock = System.Windows.Forms.DockStyle.None;
-            this.tsvis.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.tscRate,
-            this.toolStripSeparator4,
-            this.bzoomIn,
-            this.bzoomOut,
-            this.toolStripSeparator5,
-            this.bShowPreView});
-            this.tsvis.Location = new System.Drawing.Point(0, 38);
-            this.tsvis.Name = "tsvis";
-            this.tsvis.Size = new System.Drawing.Size(947, 25);
-            this.tsvis.Stretch = true;
-            this.tsvis.TabIndex = 1;
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(82, 22);
-            this.toolStripLabel1.Text = "画像の大きさ：";
-            // 
-            // tscRate
-            // 
-            this.tscRate.DropDownHeight = 199;
-            this.tscRate.IntegralHeight = false;
-            this.tscRate.Items.AddRange(new object[] {
-            "頁全体",
-            "頁幅",
-            "25 %",
-            "37 %",
-            "50 %",
-            "75 %",
-            "100 %",
-            "150 %",
-            "200 %",
-            "300 %",
-            "400 %"});
-            this.tscRate.Name = "tscRate";
-            this.tscRate.Size = new System.Drawing.Size(87, 25);
-            this.tscRate.SelectedIndexChanged += new System.EventHandler(this.tscRate_SelectedIndexChanged);
-            this.tscRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tscRate_KeyDown);
-            this.tscRate.Validating += new System.ComponentModel.CancelEventHandler(this.tscRate_Validating);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
             // bzoomIn
             // 
             this.bzoomIn.Image = ((System.Drawing.Image)(resources.GetObject("bzoomIn.Image")));
@@ -696,11 +746,6 @@
             this.bzoomOut.Text = "縮小";
             this.bzoomOut.Click += new System.EventHandler(this.bzoomOut_Click);
             // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-            // 
             // bShowPreView
             // 
             this.bShowPreView.Checked = true;
@@ -712,39 +757,6 @@
             this.bShowPreView.Size = new System.Drawing.Size(84, 22);
             this.bShowPreView.Text = "画像を表示";
             this.bShowPreView.Click += new System.EventHandler(this.bShowPreView_Click);
-            // 
-            // ofdPict
-            // 
-            this.ofdPict.DefaultExt = "tif";
-            this.ofdPict.Filter = "*.tif;*.tiff|*.tif;*.tiff";
-            // 
-            // mThumb
-            // 
-            this.mThumb.Name = "contextMenuStrip1";
-            this.mThumb.Size = new System.Drawing.Size(61, 4);
-            // 
-            // sfdPict
-            // 
-            this.sfdPict.DefaultExt = "tif";
-            this.sfdPict.Filter = "*.tif;*.tiff|*.tif;*.tiff";
-            // 
-            // ofdAppend
-            // 
-            this.ofdAppend.DefaultExt = "tif";
-            this.ofdAppend.Filter = "*.tif;*.tiff|*.tif;*.tiff";
-            this.ofdAppend.Multiselect = true;
-            // 
-            // pGo
-            // 
-            this.pGo.AllowSomePages = true;
-            this.pGo.Document = this.pDocGo;
-            // 
-            // pDocGo
-            // 
-            this.pDocGo.DocumentName = "図面";
-            this.pDocGo.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.pDocGo_PrintPage);
-            this.pDocGo.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler(this.pDocGo_QueryPageSettings);
-            this.pDocGo.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.pDocGo_BeginPrint);
             // 
             // tv
             // 
@@ -812,14 +824,14 @@
             this.panel1.ResumeLayout(false);
             this.tlpDPIWarn.ResumeLayout(false);
             this.tlpDPIWarn.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tlpExifCut.ResumeLayout(false);
             this.tlpExifCut.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tstop.ResumeLayout(false);
             this.tstop.PerformLayout();
             this.tsvis.ResumeLayout(false);
             this.tsvis.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -857,7 +869,6 @@
         private System.Windows.Forms.OpenFileDialog ofdAppend;
         private System.Windows.Forms.Label labelVSep;
         private System.Windows.Forms.ToolStripButton bNega;
-        private System.Windows.Forms.ToolStripButton bMSPaint;
         private System.Windows.Forms.TableLayoutPanel tlpExifCut;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
@@ -881,6 +892,8 @@
         private System.Windows.Forms.ToolStripMenuItem bB4P300;
         private System.Windows.Forms.ToolStripMenuItem bB5P300;
         private System.Windows.Forms.ToolStripMenuItem bJapanesePostCard300;
+        private System.Windows.Forms.ToolStripButton bMSPaint;
+        private System.Windows.Forms.ToolStripButton bHist;
     }
 }
 

@@ -60,9 +60,9 @@ namespace jtifedit3.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap _1 {
+        internal static System.Drawing.Bitmap App {
             get {
-                object obj = ResourceManager.GetObject("1", resourceCulture);
+                object obj = ResourceManager.GetObject("App", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -112,6 +112,13 @@ namespace jtifedit3.Properties {
         internal static System.Drawing.Bitmap ExpirationHS {
             get {
                 object obj = ResourceManager.GetObject("ExpirationHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap History {
+            get {
+                object obj = ResourceManager.GetObject("History", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
