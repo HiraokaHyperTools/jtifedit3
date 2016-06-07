@@ -62,6 +62,7 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CTIF.cs" />
     <Compile Include="DPIForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,6 +196,7 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\List_BulletsHS.png" />
     <None Include="Resources\History.png" />
     <None Include="Resources\DocumentHS.png" />
     <None Include="Resources\RulerHS.png" />

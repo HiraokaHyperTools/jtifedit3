@@ -1537,5 +1537,53 @@ namespace jtifedit3 {
             }
         }
 
+        private void bTIFI_Click(object sender, EventArgs e) {
+            if (Currentfp == null) return;
+
+            StringWriter wr = new StringWriter();
+
+            using (FileStream fs = File.OpenRead(Currentfp)) {
+                CTIF tif = new CTIF();
+                tif.Read(fs);
+
+                int y = 0;
+                foreach (CTIF.P1 p1 in tif.Pages) {
+                    ++y;
+                    String fmt = "";
+                    // http://www.awaresystems.be/imaging/tiff/tifftags/compression.html
+                    switch (p1.Compression) {
+                        case 1: fmt = "No compression"; break;
+                        case 2: fmt = "CCITT modified Huffman RLE"; break;
+                        case 32773: fmt = "PackBits compression, aka Macintosh RLE"; break;
+                        case 3: fmt = "CCITT Group 3 fax encoding"; break;
+                        case 4: fmt = "CCITT Group 4 fax encoding"; break;
+                        case 5: fmt = "LZW"; break;
+                        case 6: fmt = "JPEG ('old-style' JPEG)"; break;
+                        case 7: fmt = "JPEG ('new-style' JPEG)"; break;
+                        case 8: fmt = "Deflate ('Adobe-style')"; break;
+                        case 9: fmt = "T.85"; break;
+                        case 10: fmt = "T.43"; break;
+                    }
+                    String BitsPerSample = "";
+                    if (p1.BitsPerSample != null)
+                        foreach (int v in p1.BitsPerSample)
+                            BitsPerSample += " " + v;
+                    wr.WriteLine("p.{0} = {1} ({2}) {7}x{8} {3}x{4} BitsPerSample='{5}' SamplesPerPixel={6}"
+                        , y
+                        , fmt
+                        , p1.Compression
+                        , p1.HorizontalResolution
+                        , p1.VerticalResolution
+                        , BitsPerSample.Trim()
+                        , p1.SamplesPerPixel
+                        , p1.Width
+                        , p1.Height
+                        );
+                }
+            }
+
+            MessageBox.Show("" + wr);
+        }
+
     }
 }

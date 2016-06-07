@@ -130,6 +130,13 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap List_BulletsHS {
+            get {
+                object obj = ResourceManager.GetObject("List_BulletsHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap NewDocumentHS {
             get {
                 object obj = ResourceManager.GetObject("NewDocumentHS", resourceCulture);

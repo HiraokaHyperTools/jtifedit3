@@ -8,7 +8,9 @@
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!define VER    "1.0.22"
+!system 'DefineAsmVer.exe jtifedit3\bin\x86\release\jtifedit3.exe "!define VER ""[SVER]"" " > Tmpver.nsh'
+!include "Tmpver.nsh"
+
 !searchreplace APV ${VER} "." "_"
 
 !define MIME "image/tiff"
