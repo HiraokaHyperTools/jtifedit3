@@ -1143,7 +1143,7 @@ namespace jtifedit3 {
         private void bMSPaint_Click(object sender, EventArgs e) {
             for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
                 FIBITMAP dib = tv.Picts[x].Picture;
-                bool isMono = (FreeImage.GetBPP(dib) == 1);
+                bool isMono = false;// (FreeImage.GetBPP(dib) == 1);
                 String fp = pfut.Next(isMono ? ".bmp" : ".png");
                 uint rx = FreeImage.GetResolutionX(dib);
                 uint ry = FreeImage.GetResolutionY(dib);
@@ -1162,6 +1162,7 @@ namespace jtifedit3 {
                         }
                         switch (form.ShowDialog()) {
                             case DialogResult.OK: {
+                                    // ペイントの不具合で、モノクロ BMP は常にモノクロ BMP で保存される?
                                     FIBITMAP dibNew = isMono
                                         ? FreeImage.Load(FREE_IMAGE_FORMAT.FIF_BMP, fp, FREE_IMAGE_LOAD_FLAGS.DEFAULT)
                                         : FreeImage.Load(FREE_IMAGE_FORMAT.FIF_PNG, fp, FREE_IMAGE_LOAD_FLAGS.DEFAULT);
