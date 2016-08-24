@@ -207,6 +207,13 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap scanner {
+            get {
+                object obj = ResourceManager.GetObject("scanner", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap TLeft {
             get {
                 object obj = ResourceManager.GetObject("TLeft", resourceCulture);

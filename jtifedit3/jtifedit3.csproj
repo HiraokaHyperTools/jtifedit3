@@ -165,6 +165,8 @@
     </Compile>
     <Compile Include="TIFCut.cs" />
     <Compile Include="TIFx.cs" />
+    <Compile Include="TwainDefs.cs" />
+    <Compile Include="TwainLib.cs" />
     <Compile Include="WIP.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -197,6 +199,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\List_BulletsHS.png" />
+    <None Include="Resources\scanner.png" />
     <None Include="Resources\History.png" />
     <None Include="Resources\DocumentHS.png" />
     <None Include="Resources\RulerHS.png" />

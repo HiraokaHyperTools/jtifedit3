@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading;
 using System.Drawing.Printing;
 using jtifedit3.Properties;
+using TwainLib;
 
 namespace jtifedit3 {
     public partial class JForm : Form {
@@ -158,6 +159,10 @@ namespace jtifedit3 {
             if (fp != null) Openf(fp);
 
             tscRate.SelectedIndex = 0;
+
+            tw.Init();
+            tw.ImageAvail += new EventHandler<ImageAvailEventArgs>(tw_ImageAvail);
+            tw.EndingScan += new EventHandler(tw_EndingScan);
         }
 
         void Picts_ListChanged(object sender, ListChangedEventArgs e) {
@@ -1584,6 +1589,43 @@ namespace jtifedit3 {
             }
 
             MessageBox.Show("" + wr);
+        }
+
+        private void bScan_Click(object sender, EventArgs e) {
+
+        }
+
+        private void bSelScanner_Click(object sender, EventArgs e) {
+            tw.Select();
+        }
+
+        Twain tw = new Twain();
+
+        bool insertMode = false;
+
+        private void bScanInsert_Click(object sender, EventArgs e) {
+            insertMode = true;
+            tw.Acquire();
+        }
+
+        private void bScanAppend_Click(object sender, EventArgs e) {
+            insertMode = false;
+            tw.Acquire();
+        }
+
+        void tw_EndingScan(object sender, EventArgs e) {
+
+        }
+
+        void tw_ImageAvail(object sender, ImageAvailEventArgs e) {
+            if (insertMode) {
+                FIBITMAP fib = FreeImage.CreateFromBitmap(e.Pic);
+                tv.Picts.Insert(Math.Max(0, tv.SelFirst), new TvPict(fib));
+            }
+            else {
+                FIBITMAP fib = FreeImage.CreateFromBitmap(e.Pic);
+                tv.Picts.Add(new TvPict(fib));
+            }
         }
 
     }
