@@ -67,6 +67,13 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap base_triangle {
+            get {
+                object obj = ResourceManager.GetObject("base_triangle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap ColorHS {
             get {
                 object obj = ResourceManager.GetObject("ColorHS", resourceCulture);

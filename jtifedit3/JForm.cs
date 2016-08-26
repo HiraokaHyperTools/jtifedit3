@@ -1628,5 +1628,59 @@ namespace jtifedit3 {
             }
         }
 
+        private void bFreeRot_Click(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                FIBITMAP dib = tv.Picts[x].Picture;
+                using (LeanForm form = new LeanForm(dib)) {
+                    if (form.ShowDialog(this) == DialogResult.Yes) {
+                        using (WIPPanel wip = new WIPPanel(this)) {
+                            FIBITMAP dib2 = FreeImage.ConvertTo32Bits(dib);
+                            try {
+                                FreeImage.Invert(dib2);
+                                float ox = FreeImage.GetWidth(dib2) / 2;
+                                float oy = FreeImage.GetHeight(dib2) / 2;
+                                FIBITMAP dib3 = FreeImage.RotateEx(dib2, form.newrot, 0, 0, ox, oy, true);
+                                FreeImage.Invert(dib3);
+                                FreeImage.UnloadEx(ref dib2);
+                                try {
+                                    FIBITMAP dibFin;
+                                    switch (FreeImage.GetBPP(dib)) {
+                                        case 1:
+                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE);
+                                            break;
+                                        case 4:
+                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP);
+                                            break;
+                                        case 8:
+                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP);
+                                            break;
+                                        case 15:
+                                        case 16:
+                                        case 24:
+                                        default:
+                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_24_BPP);
+                                            break;
+                                        case 32:
+                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_32_BPP);
+                                            break;
+                                    }
+                                    FreeImage.UnloadEx(ref dib3);
+                                    tv.Picts[x].Picture = dibFin;
+                                    tv.Picts.ResetItem(x);
+                                }
+                                finally {
+                                    FreeImage.UnloadEx(ref dib3);
+                                }
+                            }
+                            finally {
+                                FreeImage.UnloadEx(ref dib2);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
     }
 }
