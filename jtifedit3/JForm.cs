@@ -24,6 +24,12 @@ namespace jtifedit3 {
             InitializeComponent();
 
             this.fp = fp;
+
+            if (!Settings.Default.RestoreBounds.IsEmpty) {
+                WindowState = FormWindowState.Normal;
+                Bounds = Settings.Default.RestoreBounds;
+                WindowState = FormWindowState.Maximized;
+            }
         }
 
         bool isModified = false;
@@ -1080,6 +1086,9 @@ namespace jtifedit3 {
 
         private void JForm_FormClosed(object sender, FormClosedEventArgs e) {
             tempfp.Cleanup();
+
+            Settings.Default.RestoreBounds = Bounds;
+            Settings.Default.Save();
         }
 
         private void bAppend_Click(object sender, EventArgs e) {
