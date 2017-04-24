@@ -905,5 +905,14 @@ namespace jtifedit3 {
 
             if (PictureChanged != null) PictureChanged(this, new EventArgs());
         }
+
+        public Bitmap GetBitmapCopy() {
+            Bitmap pic = FreeImage.GetBitmap(Picture);
+            pic.SetResolution(
+                FreeImage.GetResolutionX(Picture),
+                FreeImage.GetResolutionY(Picture)
+                );
+            return pic;
+        }
     }
 }

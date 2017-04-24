@@ -32,7 +32,10 @@
             this.Name = "PreViewer";
             this.Load += new System.EventHandler(this.PreViewer_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.PreViewer_Paint);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PreViewer_MouseMove);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PreViewer_MouseDown);
             this.Resize += new System.EventHandler(this.PreViewer_Resize);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PreViewer_MouseUp);
             this.ResumeLayout(false);
 
         }

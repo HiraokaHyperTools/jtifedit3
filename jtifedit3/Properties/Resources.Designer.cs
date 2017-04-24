@@ -81,6 +81,20 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap CopyHS {
+            get {
+                object obj = ResourceManager.GetObject("CopyHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap CutHS {
+            get {
+                object obj = ResourceManager.GetObject("CutHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap DataContainer_NewRecordHS {
             get {
                 object obj = ResourceManager.GetObject("DataContainer_NewRecordHS", resourceCulture);
@@ -95,9 +109,30 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap DirectSelection_16x {
+            get {
+                object obj = ResourceManager.GetObject("DirectSelection_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap DocumentHS {
             get {
                 object obj = ResourceManager.GetObject("DocumentHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Edit_RedoHS {
+            get {
+                object obj = ResourceManager.GetObject("Edit_RedoHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Edit_UndoHS {
+            get {
+                object obj = ResourceManager.GetObject("Edit_UndoHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -119,6 +154,41 @@ namespace jtifedit3.Properties {
         internal static System.Drawing.Bitmap ExpirationHS {
             get {
                 object obj = ResourceManager.GetObject("ExpirationHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Explorer24 {
+            get {
+                object obj = ResourceManager.GetObject("Explorer24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ExportFile_16x {
+            get {
+                object obj = ResourceManager.GetObject("ExportFile_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FillBlack {
+            get {
+                object obj = ResourceManager.GetObject("FillBlack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FillWhite {
+            get {
+                object obj = ResourceManager.GetObject("FillWhite", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap FontHS {
+            get {
+                object obj = ResourceManager.GetObject("FontHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -165,6 +235,20 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap PasteHS {
+            get {
+                object obj = ResourceManager.GetObject("PasteHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Pen {
+            get {
+                object obj = ResourceManager.GetObject("Pen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap PlayHS {
             get {
                 object obj = ResourceManager.GetObject("PlayHS", resourceCulture);
@@ -189,6 +273,20 @@ namespace jtifedit3.Properties {
         internal static System.Drawing.Bitmap question {
             get {
                 object obj = ResourceManager.GetObject("question", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap RecolorPictureHS {
+            get {
+                object obj = ResourceManager.GetObject("RecolorPictureHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap RectangleSelectionTool_16x {
+            get {
+                object obj = ResourceManager.GetObject("RectangleSelectionTool_16x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -221,6 +319,13 @@ namespace jtifedit3.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap TextElement_16x {
+            get {
+                object obj = ResourceManager.GetObject("TextElement_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap TLeft {
             get {
                 object obj = ResourceManager.GetObject("TLeft", resourceCulture);
@@ -238,6 +343,20 @@ namespace jtifedit3.Properties {
         internal static System.Drawing.Bitmap WarningHS {
             get {
                 object obj = ResourceManager.GetObject("WarningHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ZoomIn {
+            get {
+                object obj = ResourceManager.GetObject("ZoomIn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ZoomOut {
+            get {
+                object obj = ResourceManager.GetObject("ZoomOut", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

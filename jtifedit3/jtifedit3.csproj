@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -63,6 +64,15 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CTIF.cs" />
+    <Compile Include="CutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CutForm.Designer.cs">
+      <DependentUpon>CutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DoubleBufferPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -80,6 +90,12 @@
     </Compile>
     <Compile Include="EdForm.Designer.cs">
       <DependentUpon>EdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FillForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FillForm.Designer.cs">
+      <DependentUpon>FillForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FitRect3.cs" />
     <Compile Include="JForm.cs">
@@ -106,6 +122,12 @@
     <Compile Include="PageSetForm.Designer.cs">
       <DependentUpon>PageSetForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PastePicForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PastePicForm.Designer.cs">
+      <DependentUpon>PastePicForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PreViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -118,6 +140,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CutForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CutForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DoubleBufferPanel.resx">
       <SubType>Designer</SubType>
       <DependentUpon>DoubleBufferPanel.cs</DependentUpon>
@@ -129,6 +155,10 @@
     <EmbeddedResource Include="EdForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FillForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FillForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="JForm.resx">
       <SubType>Designer</SubType>
@@ -146,6 +176,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>PageSetForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PastePicForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PastePicForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PreViewer.resx">
       <SubType>Designer</SubType>
       <DependentUpon>PreViewer.cs</DependentUpon>
@@ -154,6 +188,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TextForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ThumbView.resx">
       <SubType>Designer</SubType>
@@ -176,6 +214,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="TextForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextForm.Designer.cs">
+      <DependentUpon>TextForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ThumbView.cs">
       <SubType>UserControl</SubType>
@@ -218,8 +262,27 @@
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\DataSources\TextTemplate.datasource" />
     <None Include="Resources\base_triangle.png" />
+    <None Include="Resources\CutHS.png" />
+    <None Include="Resources\CopyHS.png" />
+    <None Include="Resources\DirectSelection_16x.png" />
+    <None Include="Resources\Edit_RedoHS.png" />
+    <None Include="Resources\Edit_UndoHS.png" />
+    <None Include="Resources\FontHS.png" />
+    <None Include="Resources\ExportFile_16x.png" />
+    <None Include="Resources\Explorer.png" />
+    <None Include="Resources\Explorer24.png" />
+    <None Include="Resources\FillWhite.png" />
+    <None Include="Resources\FillBlack.png" />
     <Content Include="Resources\List_BulletsHS.png" />
+    <Content Include="Resources\PasteHS.png" />
+    <None Include="Resources\RecolorPictureHS.png" />
+    <None Include="Resources\Pen.png" />
+    <None Include="Resources\ZoomOut.png" />
+    <None Include="Resources\ZoomIn.png" />
+    <None Include="Resources\TextElement_16x.png" />
+    <None Include="Resources\RectangleSelectionTool_16x.png" />
     <None Include="Resources\scanner.png" />
     <None Include="Resources\History.png" />
     <None Include="Resources\DocumentHS.png" />

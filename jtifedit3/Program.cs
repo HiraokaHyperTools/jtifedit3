@@ -23,5 +23,13 @@ namespace jtifedit3 {
             Application.Run(new JForm(fp));
             //Application.Run(new FR3Form());
         }
+
+        public static String TemplateDir {
+            get {
+                String dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "jtifedit3\\templates");
+                Directory.CreateDirectory(dir);
+                return dir;
+            }
+        }
     }
 }

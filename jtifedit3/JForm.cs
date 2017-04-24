@@ -1619,11 +1619,11 @@ namespace jtifedit3 {
 
         void tw_ImageAvail(object sender, ImageAvailEventArgs e) {
             if (insertMode) {
-                FIBITMAP fib = FreeImage.CreateFromBitmap(e.Pic);
+                FIBITMAP fib = FreeImage_CreateFromBitmap(e.Pic);
                 tv.Picts.Insert(Math.Max(0, tv.SelFirst), new TvPict(fib));
             }
             else {
-                FIBITMAP fib = FreeImage.CreateFromBitmap(e.Pic);
+                FIBITMAP fib = FreeImage_CreateFromBitmap(e.Pic);
                 tv.Picts.Add(new TvPict(fib));
             }
         }
@@ -1682,5 +1682,130 @@ namespace jtifedit3 {
             }
         }
 
+        private void bWriteText_Click(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                using (TextForm form = new TextForm()) {
+                    Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
+                    form.SetPic(bitmapSource);
+                    if (e is EventArgsWithFile) {
+                        form.LoadTemplateFrom(((EventArgsWithFile)e).fp);
+                    }
+                    if (form.ShowDialog() == DialogResult.OK) {
+                        tv.Picts[x].Picture = FreeImage_CreateFromBitmap(form.CompositeTo(bitmapSource));
+                        tv.Picts.ResetItem(x);
+                    }
+                }
+                break;
+            }
+        }
+
+        private FIBITMAP FreeImage_CreateFromBitmap(Bitmap bitmap) {
+            FIBITMAP dib = FreeImage.CreateFromBitmap(bitmap);
+            FreeImage.SetResolutionX(dib, (uint)bitmap.HorizontalResolution);
+            FreeImage.SetResolutionY(dib, (uint)bitmap.VerticalResolution);
+            return dib;
+        }
+
+        private void bWriteText_DropDownOpening(object sender, EventArgs e) {
+            while (bWriteText.DropDownItems.Count >= 2) {
+                bWriteText.DropDownItems.RemoveAt(1);
+            }
+
+            String[] files = Directory.GetFiles(Program.TemplateDir, "*.xml");
+            if (files.Length > 0) {
+                bWriteText.DropDownItems.Add(new ToolStripSeparator());
+                foreach (String fp in files) {
+                    String thisfp = fp;
+                    bWriteText.DropDownItems.Add(Path.GetFileNameWithoutExtension(fp), null, delegate {
+                        EventArgsWithFile ee = new EventArgsWithFile();
+                        ee.fp = thisfp;
+                        bWriteText_Click(this, ee);
+                    });
+                }
+            }
+        }
+
+        class EventArgsWithFile : EventArgs {
+            public String fp;
+        }
+
+        private void bWriteImage_ButtonClick(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                if (ofdImport.ShowDialog(this) == DialogResult.OK) {
+                    writeImage(x, ofdImport.FileName);
+                }
+                break;
+            }
+        }
+
+        private void writeImage(int x, string fp) {
+            using (PastePicForm form = new PastePicForm()) {
+                Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
+                form.SetPic(bitmapSource);
+                form.ImportPic(fp);
+                if (form.ShowDialog() == DialogResult.OK) {
+                    tv.Picts[x].Picture = FreeImage_CreateFromBitmap(form.CompositeTo(bitmapSource));
+                    tv.Picts.ResetItem(x);
+                }
+            }
+        }
+
+        private void bWriteImageNew_Click(object sender, EventArgs e) {
+            bWriteImage_ButtonClick(sender, e);
+        }
+
+        private void bWriteImage_DropDownOpening(object sender, EventArgs e) {
+#if false
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                int thisx = x;
+                while (bWriteImage.DropDownItems.Count >= 2) {
+                    bWriteImage.DropDownItems.RemoveAt(1);
+                }
+
+                String[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
+                if (files.Length > 0) {
+                    bWriteImage.DropDownItems.Add(new ToolStripSeparator());
+                    foreach (String fp in files) {
+                        if ("|.bmp|.gif|.jpg|.jpeg|.png.|.emf|.wmf|".IndexOf("|" + Path.GetExtension(fp).ToLowerInvariant() + "|") < 0) {
+                            continue;
+                        }
+                        String thisfp = fp;
+                        bWriteImage.DropDownItems.Add(Path.GetFileNameWithoutExtension(fp), null, delegate {
+                            writeImage(thisx, thisfp);
+                        });
+                    }
+                }
+
+                break;
+            }
+#endif
+        }
+
+        private void bCutPic_Click(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                using (CutForm form = new CutForm()) {
+                    Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
+                    form.SetPic(bitmapSource);
+                    if (form.ShowDialog() == DialogResult.OK) {
+
+                    }
+                }
+                break;
+            }
+        }
+
+        private void bFillPic_Click(object sender, EventArgs e) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+                using (FillForm form = new FillForm()) {
+                    Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
+                    form.SetPic(bitmapSource);
+                    if (form.ShowDialog() == DialogResult.OK) {
+                        tv.Picts[x].Picture = FreeImage_CreateFromBitmap(form.CompositeTo(bitmapSource));
+                        tv.Picts.ResetItem(x);
+                    }
+                }
+                break;
+            }
+        }
     }
 }
