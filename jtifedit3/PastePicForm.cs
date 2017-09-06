@@ -48,6 +48,22 @@ namespace jtifedit3 {
         float scale;
         Bitmap bitmapNow;
 
+        Bitmap transparentedBitmap;
+        Color newTransparentColor;
+
+        Bitmap getTransparentedBitmap() {
+            if (transparentedBitmap == null) {
+                if (newTransparentColor != Color.Empty) {
+                    transparentedBitmap = new Bitmap(imagePaste);
+                    transparentedBitmap.MakeTransparent(newTransparentColor);
+                }
+                else {
+                    transparentedBitmap = (Bitmap)imagePaste;
+                }
+            }
+            return transparentedBitmap;
+        }
+
         private void panel2_Resize(object sender, EventArgs e) {
             rcPlace = FitRect3.ZoomFit(panel2.ClientRectangle, sizeImage);
             scale = rcPlace.Width / (float)sizeImage.Width;
@@ -75,7 +91,7 @@ namespace jtifedit3 {
                 cx,
                 cy
                 );
-            cv.DrawImage(imagePaste, rcPaste);
+            cv.DrawImage(getTransparentedBitmap(), rcPaste);
 
             if (toControl) {
                 cv.DrawRectangle(penDash, rcPaste);
@@ -175,6 +191,18 @@ namespace jtifedit3 {
 
         private void b100_Click(object sender, EventArgs e) {
             scalePaste = float.Parse(((Button)sender).Text.Split('%')[0]) / 100;
+            panel2.Invalidate();
+        }
+
+        private void bOpaque_Click(object sender, EventArgs e) {
+            transparentedBitmap = null;
+            newTransparentColor = Color.Empty;
+            panel2.Invalidate();
+        }
+
+        private void bTransparent_Click(object sender, EventArgs e) {
+            transparentedBitmap = null;
+            newTransparentColor = Color.White;
             panel2.Invalidate();
         }
 

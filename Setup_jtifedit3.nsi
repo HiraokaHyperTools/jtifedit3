@@ -20,6 +20,9 @@
 
 ; bin\x86\release
 
+!system 'MySign "jtifedit3\bin\x86\release\jtifedit3.exe"'
+!finalize 'MySign "%1"'
+
 ;--------------------------------
 
 ; The name of the installer
