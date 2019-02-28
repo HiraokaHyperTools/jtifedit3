@@ -97,7 +97,7 @@ UninstPage instfiles
 ;--------------------------------
 
 InstType "32 ビット版"
-InstType "Any CPU 版 (32 or 64 ビット自動)"
+InstType "Any CPU 版 (64 or 32 ビット自動)"
 
 ; The stuff to install
 Section "${APP}" ;No components page, name is not important
@@ -109,13 +109,6 @@ Section "${APP}" ;No components page, name is not important
   !insertmacro CheckDotNET ${DOTNET_VERSION}
 
   ; Put file there
-  File "jtifedit3\MAPISendMailSa.exe"
-  File "jtifedit3\x32\FreeImage.dll"
-  File "jtifedit3\x64\FreeImage.dll"
-  File "jtifedit3\FreeImageNET.dll"
-  File "jtifedit3\1.ico"
-  
-  Delete "$INSTDIR\FreeImage.dll"
 
   WriteRegStr HKCU "Software\Classes\${APP}" "" "${TITLE}"
   WriteRegstr HKCU "Software\Classes\${APP}\DefaultIcon" "" "$INSTDIR\1.ico,0"
@@ -134,14 +127,18 @@ SectionEnd ; end the section
 
 Section "32 ビット版"
   SectionIn 1
-  File "jtifedit3\bin\x86\release\jtifedit3.exe"
-  File "jtifedit3\bin\x86\release\jtifedit3.pdb"
+
+  Delete "$INSTDIR\FreeImage.dll"
+  
+  File /r /x "*.vshost.*" /x "*.xml" "jtifedit3\bin\x86\release\*.*"
 SectionEnd
 
-Section /o "Any CPU 版 (32 or 64 ビット自動)"
+Section /o "Any CPU 版 (64 or 32 ビット自動)"
   SectionIn 2
-  File "jtifedit3\bin\release\jtifedit3.exe"
-  File "jtifedit3\bin\release\jtifedit3.pdb"
+
+  Delete "$INSTDIR\FreeImage.dll"
+  
+  File /r /x "*.vshost.*" /x "*.xml" "jtifedit3\bin\release\*.*"
 SectionEnd
 
 Section "関連付け(現在のアカウント)"
@@ -207,12 +204,6 @@ Section "Uninstall"
   DeleteRegKey HKCU "Software\Classes\Applications\${APP}.exe"
 
   ; Remove files and uninstaller
-  Delete "$INSTDIR\1.ico"
-  Delete "$INSTDIR\FreeImage.dll"
-  Delete "$INSTDIR\FreeImageNET.dll"
-  Delete "$INSTDIR\jtifedit3.exe"
-  Delete "$INSTDIR\jtifedit3.pdb"
-  Delete "$INSTDIR\MAPISendMailSa.exe"
 
   DetailPrint "関連付け更新中です。お待ちください。"
   !insertmacro UPDATEFILEASSOC
@@ -225,6 +216,6 @@ Section "Uninstall"
 
   ; Remove directories used
   RMDir "$SMPROGRAMS\${TITLE}"
-  RMDir "$INSTDIR"
+  RMDir /r "$INSTDIR"
 
 SectionEnd

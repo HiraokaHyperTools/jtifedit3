@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
@@ -16,6 +16,13 @@ namespace jtifedit3 {
                     fp = a;
                 }
             }
+
+            Environment.SetEnvironmentVariable(
+                "PATH",
+                Environment.GetEnvironmentVariable("PATH").TrimEnd(';')
+                + ";"
+                + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, (IntPtr.Size == 4) ? "x32" : "x64")
+                );
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

@@ -1,4 +1,4 @@
-﻿namespace jtifedit3 {
+namespace jtifedit3 {
     partial class JForm {
         /// <summary>
         /// 必要なデザイナ変数です。
@@ -81,6 +81,11 @@
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.bScanInsert = new System.Windows.Forms.ToolStripMenuItem();
             this.bScanAppend = new System.Windows.Forms.ToolStripMenuItem();
+            this.bWia = new System.Windows.Forms.ToolStripDropDownButton();
+            this.bSelectWiaDevice = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
+            this.bInsertWia = new System.Windows.Forms.ToolStripMenuItem();
+            this.bAppendWia = new System.Windows.Forms.ToolStripMenuItem();
             this.bMail = new System.Windows.Forms.ToolStripDropDownButton();
             this.bMailSel = new System.Windows.Forms.ToolStripMenuItem();
             this.bMailContents = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,6 +114,7 @@
             this.pGo = new System.Windows.Forms.PrintDialog();
             this.pDocGo = new System.Drawing.Printing.PrintDocument();
             this.ofdImport = new System.Windows.Forms.OpenFileDialog();
+            this.scannerList = new System.Windows.Forms.ContextMenuStrip(this.components);
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -225,7 +231,7 @@
             // tssl
             // 
             this.tssl.Name = "tssl";
-            this.tssl.Size = new System.Drawing.Size(43, 17);
+            this.tssl.Size = new System.Drawing.Size(39, 17);
             this.tssl.Text = "Ready";
             // 
             // vsc
@@ -263,14 +269,14 @@
             this.tv.Size = new System.Drawing.Size(260, 332);
             this.tv.SSel = -1;
             this.tv.TabIndex = 2;
-            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
-            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
             this.tv.SelChanged += new System.EventHandler(this.tv_SelChanged);
-            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
             this.tv.PictDrag += new System.EventHandler(this.tv_PictDrag);
             this.tv.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
-            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
             this.tv.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+            this.tv.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragOver);
+            this.tv.DragLeave += new System.EventHandler(this.tv_DragLeave);
+            this.tv.QueryContinueDrag += new System.Windows.Forms.QueryContinueDragEventHandler(this.tv_QueryContinueDrag);
+            this.tv.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tv_MouseMove);
             // 
             // labelVSep
             // 
@@ -293,10 +299,10 @@
             this.bAppend.TabIndex = 3;
             this.bAppend.Text = "--- ページを最後に追加 ---";
             this.bAppend.UseVisualStyleBackColor = false;
-            this.bAppend.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
             this.bAppend.Click += new System.EventHandler(this.bAppend_Click);
             this.bAppend.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
             this.bAppend.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+            this.bAppend.DragOver += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
             // 
             // panel1
             // 
@@ -479,6 +485,7 @@
             this.bPageSetting,
             toolStripSeparator13,
             this.bScan,
+            this.bWia,
             toolStripSeparator9,
             this.bMail,
             toolStripSeparator6,
@@ -510,7 +517,7 @@
             this.bOpenf.Image = global::jtifedit3.Properties.Resources.openHS;
             this.bOpenf.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bOpenf.Name = "bOpenf";
-            this.bOpenf.Size = new System.Drawing.Size(29, 35);
+            this.bOpenf.Size = new System.Drawing.Size(30, 35);
             this.bOpenf.Text = "開く";
             this.bOpenf.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bOpenf.Click += new System.EventHandler(this.bOpenf_Click);
@@ -530,7 +537,7 @@
             this.bSaveas.Image = global::jtifedit3.Properties.Resources.saveHS;
             this.bSaveas.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bSaveas.Name = "bSaveas";
-            this.bSaveas.Size = new System.Drawing.Size(99, 35);
+            this.bSaveas.Size = new System.Drawing.Size(98, 35);
             this.bSaveas.Text = "名前を付けて保存";
             this.bSaveas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bSaveas.Click += new System.EventHandler(this.bSaveas_Click);
@@ -570,7 +577,7 @@
             this.bNewDPI.Image = global::jtifedit3.Properties.Resources.RulerHS;
             this.bNewDPI.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bNewDPI.Name = "bNewDPI";
-            this.bNewDPI.Size = new System.Drawing.Size(56, 35);
+            this.bNewDPI.Size = new System.Drawing.Size(53, 35);
             this.bNewDPI.Text = "DPI変更";
             this.bNewDPI.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bNewDPI.Click += new System.EventHandler(this.bNewDPI_Click);
@@ -622,7 +629,7 @@
             this.bWriteText.Image = global::jtifedit3.Properties.Resources.FontHS;
             this.bWriteText.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bWriteText.Name = "bWriteText";
-            this.bWriteText.Size = new System.Drawing.Size(59, 35);
+            this.bWriteText.Size = new System.Drawing.Size(58, 35);
             this.bWriteText.Text = "テキスト";
             this.bWriteText.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bWriteText.ButtonClick += new System.EventHandler(this.bWriteText_Click);
@@ -631,7 +638,7 @@
             // bNewText
             // 
             this.bNewText.Name = "bNewText";
-            this.bNewText.Size = new System.Drawing.Size(134, 22);
+            this.bNewText.Size = new System.Drawing.Size(133, 22);
             this.bNewText.Text = "新規テキスト";
             this.bNewText.Click += new System.EventHandler(this.bWriteText_Click);
             // 
@@ -676,7 +683,7 @@
             // bWriteImageNew
             // 
             this.bWriteImageNew.Name = "bWriteImageNew";
-            this.bWriteImageNew.Size = new System.Drawing.Size(191, 22);
+            this.bWriteImageNew.Size = new System.Drawing.Size(189, 22);
             this.bWriteImageNew.Text = "画像を選択して貼り付け";
             this.bWriteImageNew.Click += new System.EventHandler(this.bWriteImageNew_Click);
             // 
@@ -695,7 +702,7 @@
             this.bPageSetting.Image = global::jtifedit3.Properties.Resources.PrintSetupHS;
             this.bPageSetting.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bPageSetting.Name = "bPageSetting";
-            this.bPageSetting.Size = new System.Drawing.Size(65, 35);
+            this.bPageSetting.Size = new System.Drawing.Size(63, 35);
             this.bPageSetting.Text = "ページ設定";
             this.bPageSetting.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bPageSetting.Click += new System.EventHandler(this.bPageSetting_Click);
@@ -710,7 +717,7 @@
             this.bScan.Image = global::jtifedit3.Properties.Resources.scanner;
             this.bScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bScan.Name = "bScan";
-            this.bScan.Size = new System.Drawing.Size(57, 35);
+            this.bScan.Size = new System.Drawing.Size(55, 35);
             this.bScan.Text = "スキャナ";
             this.bScan.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bScan.Click += new System.EventHandler(this.bScan_Click);
@@ -718,28 +725,68 @@
             // bSelScanner
             // 
             this.bSelScanner.Name = "bSelScanner";
-            this.bSelScanner.Size = new System.Drawing.Size(190, 22);
+            this.bSelScanner.Size = new System.Drawing.Size(183, 22);
             this.bSelScanner.Text = "TWAIN スキャナを選択";
             this.bSelScanner.Click += new System.EventHandler(this.bSelScanner_Click);
             // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(187, 6);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(180, 6);
             // 
             // bScanInsert
             // 
             this.bScanInsert.Name = "bScanInsert";
-            this.bScanInsert.Size = new System.Drawing.Size(190, 22);
+            this.bScanInsert.Size = new System.Drawing.Size(183, 22);
             this.bScanInsert.Text = "スキャンして挿入";
             this.bScanInsert.Click += new System.EventHandler(this.bScanInsert_Click);
             // 
             // bScanAppend
             // 
             this.bScanAppend.Name = "bScanAppend";
-            this.bScanAppend.Size = new System.Drawing.Size(190, 22);
+            this.bScanAppend.Size = new System.Drawing.Size(183, 22);
             this.bScanAppend.Text = "スキャンして最後に追加";
             this.bScanAppend.Click += new System.EventHandler(this.bScanAppend_Click);
+            // 
+            // bWia
+            // 
+            this.bWia.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bSelectWiaDevice,
+            this.toolStripSeparator19,
+            this.bInsertWia,
+            this.bAppendWia});
+            this.bWia.Image = global::jtifedit3.Properties.Resources.Camera_13_16_16_32;
+            this.bWia.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bWia.Name = "bWia";
+            this.bWia.Size = new System.Drawing.Size(42, 35);
+            this.bWia.Text = "WIA";
+            this.bWia.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // bSelectWiaDevice
+            // 
+            this.bSelectWiaDevice.Name = "bSelectWiaDevice";
+            this.bSelectWiaDevice.Size = new System.Drawing.Size(183, 22);
+            this.bSelectWiaDevice.Text = "WIA デバイスを選択...";
+            this.bSelectWiaDevice.Click += new System.EventHandler(this.bSelectWiaDevice_Click);
+            // 
+            // toolStripSeparator19
+            // 
+            this.toolStripSeparator19.Name = "toolStripSeparator19";
+            this.toolStripSeparator19.Size = new System.Drawing.Size(180, 6);
+            // 
+            // bInsertWia
+            // 
+            this.bInsertWia.Name = "bInsertWia";
+            this.bInsertWia.Size = new System.Drawing.Size(183, 22);
+            this.bInsertWia.Text = "スキャンして挿入";
+            this.bInsertWia.Click += new System.EventHandler(this.bInsertWia_Click);
+            // 
+            // bAppendWia
+            // 
+            this.bAppendWia.Name = "bAppendWia";
+            this.bAppendWia.Size = new System.Drawing.Size(183, 22);
+            this.bAppendWia.Text = "スキャンして最後に追加";
+            this.bAppendWia.Click += new System.EventHandler(this.bAppendWia_Click);
             // 
             // bMail
             // 
@@ -756,14 +803,14 @@
             // bMailSel
             // 
             this.bMailSel.Name = "bMailSel";
-            this.bMailSel.Size = new System.Drawing.Size(207, 22);
+            this.bMailSel.Size = new System.Drawing.Size(202, 22);
             this.bMailSel.Text = "選択したページをメール送信";
             this.bMailSel.Click += new System.EventHandler(this.bMail_Click);
             // 
             // bMailContents
             // 
             this.bMailContents.Name = "bMailContents";
-            this.bMailContents.Size = new System.Drawing.Size(207, 22);
+            this.bMailContents.Size = new System.Drawing.Size(202, 22);
             this.bMailContents.Text = "この文書をメール送信";
             this.bMailContents.Click += new System.EventHandler(this.bMailContents_Click);
             // 
@@ -795,35 +842,35 @@
             // bA3P300
             // 
             this.bA3P300.Name = "bA3P300";
-            this.bA3P300.Size = new System.Drawing.Size(165, 22);
+            this.bA3P300.Size = new System.Drawing.Size(153, 22);
             this.bA3P300.Text = "A3縦 300dpi";
             this.bA3P300.Click += new System.EventHandler(this.bA3P300_Click);
             // 
             // bA4P300
             // 
             this.bA4P300.Name = "bA4P300";
-            this.bA4P300.Size = new System.Drawing.Size(165, 22);
+            this.bA4P300.Size = new System.Drawing.Size(153, 22);
             this.bA4P300.Text = "A4縦 300dpi";
             this.bA4P300.Click += new System.EventHandler(this.bA4P300_Click);
             // 
             // bB4P300
             // 
             this.bB4P300.Name = "bB4P300";
-            this.bB4P300.Size = new System.Drawing.Size(165, 22);
+            this.bB4P300.Size = new System.Drawing.Size(153, 22);
             this.bB4P300.Text = "JIS B4縦 300dpi";
             this.bB4P300.Click += new System.EventHandler(this.bB4P300_Click);
             // 
             // bB5P300
             // 
             this.bB5P300.Name = "bB5P300";
-            this.bB5P300.Size = new System.Drawing.Size(165, 22);
+            this.bB5P300.Size = new System.Drawing.Size(153, 22);
             this.bB5P300.Text = "JIS B5縦 300dpi";
             this.bB5P300.Click += new System.EventHandler(this.bB5P300_Click);
             // 
             // bJapanesePostCard300
             // 
             this.bJapanesePostCard300.Name = "bJapanesePostCard300";
-            this.bJapanesePostCard300.Size = new System.Drawing.Size(165, 22);
+            this.bJapanesePostCard300.Size = new System.Drawing.Size(153, 22);
             this.bJapanesePostCard300.Text = "はがき縦 300dpi";
             this.bJapanesePostCard300.Click += new System.EventHandler(this.bJapanesePostCard300_Click);
             // 
@@ -832,7 +879,7 @@
             this.bTIFI.Image = global::jtifedit3.Properties.Resources.List_BulletsHS;
             this.bTIFI.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bTIFI.Name = "bTIFI";
-            this.bTIFI.Size = new System.Drawing.Size(31, 35);
+            this.bTIFI.Size = new System.Drawing.Size(26, 35);
             this.bTIFI.Text = "TIF";
             this.bTIFI.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.bTIFI.Click += new System.EventHandler(this.bTIFI_Click);
@@ -966,13 +1013,18 @@
             // pDocGo
             // 
             this.pDocGo.DocumentName = "図面";
+            this.pDocGo.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.pDocGo_BeginPrint);
             this.pDocGo.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.pDocGo_PrintPage);
             this.pDocGo.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler(this.pDocGo_QueryPageSettings);
-            this.pDocGo.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.pDocGo_BeginPrint);
             // 
             // ofdImport
             // 
             this.ofdImport.Filter = "画像|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff;*.wmf;*.emf";
+            // 
+            // scannerList
+            // 
+            this.scannerList.Name = "scannerList";
+            this.scannerList.Size = new System.Drawing.Size(61, 4);
             // 
             // JForm
             // 
@@ -986,11 +1038,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "J TIFF Editor 3";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.JForm_FormClosed);
             this.Load += new System.EventHandler(this.JForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.JForm_DragDrop);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.JForm_FormClosed);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.JForm_DragEnter);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JForm_FormClosing);
             this.tsc.BottomToolStripPanel.ResumeLayout(false);
             this.tsc.BottomToolStripPanel.PerformLayout();
             this.tsc.ContentPanel.ResumeLayout(false);
@@ -1095,6 +1147,12 @@
         private System.Windows.Forms.ToolStripButton bCutPic;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private System.Windows.Forms.ToolStripButton bFillPic;
+        private System.Windows.Forms.ContextMenuStrip scannerList;
+        private System.Windows.Forms.ToolStripDropDownButton bWia;
+        private System.Windows.Forms.ToolStripMenuItem bSelectWiaDevice;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
+        private System.Windows.Forms.ToolStripMenuItem bInsertWia;
+        private System.Windows.Forms.ToolStripMenuItem bAppendWia;
     }
 }
 

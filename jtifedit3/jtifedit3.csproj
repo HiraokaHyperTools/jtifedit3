@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -18,6 +18,12 @@
     <RootNamespace>jtifedit3</RootNamespace>
     <AssemblyName>jtifedit3</AssemblyName>
     <ApplicationIcon>1.ico</ApplicationIcon>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,11 +55,19 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\WINDOWS\assembly\GAC_MSIL\System.Xml\2.0.0.0__b77a5c561934e089\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="TwainDotNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d3cd6e1539fa8c71, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\TwainDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="WIA, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>.\WIA.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +123,11 @@
     </Compile>
     <Compile Include="LeanForm.Designer.cs">
       <DependentUpon>LeanForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>messages.resx</DependentUpon>
     </Compile>
     <Compile Include="OpenWayForm.cs">
       <SubType>Form</SubType>
@@ -168,6 +187,10 @@
       <DependentUpon>LeanForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="OpenWayForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>OpenWayForm.cs</DependentUpon>
@@ -206,6 +229,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include=".editorconfig" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -229,8 +253,9 @@
     </Compile>
     <Compile Include="TIFCut.cs" />
     <Compile Include="TIFx.cs" />
-    <Compile Include="TwainDefs.cs" />
-    <Compile Include="TwainLib.cs" />
+    <Compile Include="Utils\MBox.cs" />
+    <Compile Include="Utils\WIAScanner.cs" />
+    <Compile Include="Utils\WinFormsWindowMessageHook.cs" />
     <Compile Include="WIP.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -255,13 +280,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="1.ico" />
-    <Content Include="FreeImage.dll">
+    <None Include="log4net.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FreeImageNET.dll" />
+    </None>
+    <None Include="Resources\Camera_13_16_16_32.png" />
+    <Content Include="TwainDotNet.dll" />
+    <Content Include="WIA.dll" />
+    <None Include="FreeImageNET.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="WIA.md" />
+    <None Include="x32\FreeImage.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="x64\FreeImage.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\DataSources\TextTemplate.datasource" />
     <None Include="Resources\base_triangle.png" />
     <None Include="Resources\CutHS.png" />
@@ -302,6 +339,9 @@
     <None Include="Resources\DataContainer_NewRecordHS.png" />
     <None Include="Resources\question.ico" />
     <None Include="Resources\NewMessageHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

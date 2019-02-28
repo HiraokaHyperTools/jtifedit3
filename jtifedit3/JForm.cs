@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,7 +13,8 @@ using System.IO;
 using System.Threading;
 using System.Drawing.Printing;
 using jtifedit3.Properties;
-using TwainLib;
+using jtifedit3.Utils;
+using TwainDotNet;
 
 namespace jtifedit3 {
     public partial class JForm : Form {
@@ -166,10 +167,14 @@ namespace jtifedit3 {
 
             tscRate.SelectedIndex = 0;
 
-            tw.Init();
-            tw.ImageAvail += new EventHandler<ImageAvailEventArgs>(tw_ImageAvail);
-            tw.EndingScan += new EventHandler(tw_EndingScan);
+            if (isX64 == false) {
+                tw = new Twain(new WinFormsWindowMessageHook(this));
+                tw.TransferImage += tw_ImageAvail;
+                tw.ScanningComplete += tw_EndingScan;
+            }
         }
+
+        bool isX64 = IntPtr.Size == 8;
 
         void Picts_ListChanged(object sender, ListChangedEventArgs e) {
             Modified = true;
@@ -315,7 +320,7 @@ namespace jtifedit3 {
                 new P1("A4", 210, 297),
                 new P1("A5", 148, 210),
                 new P1("A6", 105, 148),
-                
+
                 new P1("JIS B3", 364, 515),
                 new P1("JIS B4", 257, 364),
                 new P1("JIS B5", 182, 257),
@@ -844,7 +849,7 @@ namespace jtifedit3 {
         private bool Savef(String fp) {
             if (fp == null || ReadOnly || (0 != (File.GetAttributes(fp) & FileAttributes.ReadOnly))) {
                 sfdPict.FileName = Currentfp;
-            _Retry:
+                _Retry:
                 if (sfdPict.ShowDialog(this) != DialogResult.OK)
                     return false;
                 if (File.Exists(sfdPict.FileName) && 0 != (File.GetAttributes(sfdPict.FileName) & FileAttributes.ReadOnly)) {
@@ -1155,7 +1160,7 @@ namespace jtifedit3 {
         PFUt pfut = new PFUt();
 
         private void bMSPaint_Click(object sender, EventArgs e) {
-            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast;) {
                 FIBITMAP dib = tv.Picts[x].Picture;
                 bool isMono = false;// (FreeImage.GetBPP(dib) == 1);
                 String fp = pfut.Next(isMono ? ".bmp" : ".png");
@@ -1191,7 +1196,7 @@ namespace jtifedit3 {
                             default:
                                 return;
                         }
-                    _Break: ;
+                        _Break:;
                         break;
                     }
                 }
@@ -1605,40 +1610,60 @@ namespace jtifedit3 {
         }
 
         private void bSelScanner_Click(object sender, EventArgs e) {
-            tw.Select();
+            if (isX64) {
+                MBox.Show(this,messages.UseTwain32, Text, icon: MessageBoxIcon.Exclamation);
+            }
+            else {
+                tw.SelectSource();
+            }
         }
 
-        Twain tw = new Twain();
+        Twain tw;
 
         bool insertMode = false;
 
+        void ScanTwain() {
+            if (isX64) {
+                MBox.Show(this, messages.UseTwain32, Text, icon: MessageBoxIcon.Exclamation);
+            }
+            else {
+                tw.StartScanning(new ScanSettings {
+                    ShowTwainUI = true,
+                    ShowProgressIndicatorUI = true,
+                    ShouldTransferAllPages = true,
+                    Rotation = new RotationSettings {
+                    },
+                });
+            }
+        }
+
         private void bScanInsert_Click(object sender, EventArgs e) {
             insertMode = true;
-            tw.Acquire();
+            ScanTwain();
         }
 
         private void bScanAppend_Click(object sender, EventArgs e) {
             insertMode = false;
-            tw.Acquire();
+            ScanTwain();
         }
 
-        void tw_EndingScan(object sender, EventArgs e) {
+        void tw_EndingScan(object sender, ScanningCompleteEventArgs e) {
 
         }
 
-        void tw_ImageAvail(object sender, ImageAvailEventArgs e) {
+        void tw_ImageAvail(object sender, TransferImageEventArgs e) {
             if (insertMode) {
-                FIBITMAP fib = FreeImage_CreateFromBitmap(e.Pic);
+                FIBITMAP fib = FreeImage_CreateFromBitmap(e.Image);
                 tv.Picts.Insert(Math.Max(0, tv.SelFirst), new TvPict(fib));
             }
             else {
-                FIBITMAP fib = FreeImage_CreateFromBitmap(e.Pic);
+                FIBITMAP fib = FreeImage_CreateFromBitmap(e.Image);
                 tv.Picts.Add(new TvPict(fib));
             }
         }
 
         private void bFreeRot_Click(object sender, EventArgs e) {
-            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast;) {
                 FIBITMAP dib = tv.Picts[x].Picture;
                 using (LeanForm form = new LeanForm(dib)) {
                     if (form.ShowDialog(this) == DialogResult.Yes) {
@@ -1692,7 +1717,7 @@ namespace jtifedit3 {
         }
 
         private void bWriteText_Click(object sender, EventArgs e) {
-            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast;) {
                 using (TextForm form = new TextForm()) {
                     Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
                     form.SetPic(bitmapSource);
@@ -1739,7 +1764,7 @@ namespace jtifedit3 {
         }
 
         private void bWriteImage_ButtonClick(object sender, EventArgs e) {
-            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast;) {
                 if (ofdImport.ShowDialog(this) == DialogResult.OK) {
                     writeImage(x, ofdImport.FileName);
                 }
@@ -1791,7 +1816,7 @@ namespace jtifedit3 {
         }
 
         private void bCutPic_Click(object sender, EventArgs e) {
-            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast;) {
                 using (CutForm form = new CutForm()) {
                     Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
                     form.SetPic(bitmapSource);
@@ -1804,7 +1829,7 @@ namespace jtifedit3 {
         }
 
         private void bFillPic_Click(object sender, EventArgs e) {
-            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast; ) {
+            for (int x = tv.SelFirst; 0 <= x && x <= tv.SelLast;) {
                 using (FillForm form = new FillForm()) {
                     Bitmap bitmapSource = tv.Picts[x].GetBitmapCopy();
                     form.SetPic(bitmapSource);
@@ -1814,6 +1839,49 @@ namespace jtifedit3 {
                     }
                 }
                 break;
+            }
+        }
+
+        private void bSelectWiaDevice_Click(object sender, EventArgs e) {
+            Settings.Default.SelectedWiaDeviceId = WIAScanner.SelectDevice();
+            Settings.Default.Save();
+        }
+
+        private void bInsertWia_Click(object sender, EventArgs e) {
+            try {
+                if (string.IsNullOrEmpty(Settings.Default.SelectedWiaDeviceId)) {
+                    Settings.Default.SelectedWiaDeviceId = WIAScanner.SelectDevice();
+                    if (string.IsNullOrEmpty(Settings.Default.SelectedWiaDeviceId)) {
+                        return;
+                    }
+                }
+                var bitmaps = WIAScanner.AcquireImages(Settings.Default.SelectedWiaDeviceId);
+                foreach (var bitmap in bitmaps) {
+                    FIBITMAP fib = FreeImage_CreateFromBitmap(bitmap);
+                    tv.Picts.Insert(Math.Max(0, tv.SelFirst), new TvPict(fib));
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(this, "エラーが発生しました: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void bAppendWia_Click(object sender, EventArgs e) {
+            try {
+                if (string.IsNullOrEmpty(Settings.Default.SelectedWiaDeviceId)) {
+                    Settings.Default.SelectedWiaDeviceId = WIAScanner.SelectDevice();
+                    if (string.IsNullOrEmpty(Settings.Default.SelectedWiaDeviceId)) {
+                        return;
+                    }
+                }
+                var bitmaps = WIAScanner.AcquireImages(Settings.Default.SelectedWiaDeviceId);
+                foreach (var bitmap in bitmaps) {
+                    FIBITMAP fib = FreeImage_CreateFromBitmap(bitmap);
+                    tv.Picts.Add(new TvPict(fib));
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(this, "エラーが発生しました: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
     }
