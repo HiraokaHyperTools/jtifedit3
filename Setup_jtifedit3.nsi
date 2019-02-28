@@ -5,10 +5,12 @@
 ; prompts the user asking them where to install, and drops a copy of example1.nsi
 ; there. 
 
+Unicode true
+
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!system 'DefineAsmVer.exe jtifedit3\bin\x86\release\jtifedit3.exe "!define VER ""[SVER]"" " > Tmpver.nsh'
+!system 'DefineAsmVer.exe jtifedit3\bin\release\jtifedit3.exe "!define VER ""[SVER]"" " > Tmpver.nsh'
 !include "Tmpver.nsh"
 
 !searchreplace APV ${VER} "." "_"
@@ -18,10 +20,13 @@
 !define EXT ".tif"
 !define EXT2 ".tiff"
 
+; bin\release
 ; bin\x86\release
 
-!system 'MySign "jtifedit3\bin\x86\release\jtifedit3.exe"'
+!system 'MySign "jtifedit3\bin\release\jtifedit3.exe" "jtifedit3\bin\x86\release\jtifedit3.exe"'
 !finalize 'MySign "%1"'
+
+XPStyle on
 
 ;--------------------------------
 
@@ -91,6 +96,9 @@ UninstPage instfiles
 
 ;--------------------------------
 
+InstType "32 ビット版"
+InstType "Any CPU 版 (32 or 64 ビット自動)"
+
 ; The stuff to install
 Section "${APP}" ;No components page, name is not important
   SectionIn ro
@@ -101,12 +109,13 @@ Section "${APP}" ;No components page, name is not important
   !insertmacro CheckDotNET ${DOTNET_VERSION}
 
   ; Put file there
-  File "jtifedit3\bin\x86\release\jtifedit3.exe"
-  File "jtifedit3\bin\x86\release\jtifedit3.pdb"
   File "jtifedit3\MAPISendMailSa.exe"
-  File "jtifedit3\FreeImage.dll"
+  File "jtifedit3\x32\FreeImage.dll"
+  File "jtifedit3\x64\FreeImage.dll"
   File "jtifedit3\FreeImageNET.dll"
   File "jtifedit3\1.ico"
+  
+  Delete "$INSTDIR\FreeImage.dll"
 
   WriteRegStr HKCU "Software\Classes\${APP}" "" "${TITLE}"
   WriteRegstr HKCU "Software\Classes\${APP}\DefaultIcon" "" "$INSTDIR\1.ico,0"
@@ -123,7 +132,21 @@ Section "${APP}" ;No components page, name is not important
   
 SectionEnd ; end the section
 
+Section "32 ビット版"
+  SectionIn 1
+  File "jtifedit3\bin\x86\release\jtifedit3.exe"
+  File "jtifedit3\bin\x86\release\jtifedit3.pdb"
+SectionEnd
+
+Section /o "Any CPU 版 (32 or 64 ビット自動)"
+  SectionIn 2
+  File "jtifedit3\bin\release\jtifedit3.exe"
+  File "jtifedit3\bin\release\jtifedit3.pdb"
+SectionEnd
+
 Section "関連付け(現在のアカウント)"
+  SectionIn 1 2
+  
   WriteRegStr HKCU "Software\Classes\${EXT}" "" "${APP}"
   WriteRegStr HKCU "Software\Classes\${EXT}" "Content Type" "${MIME}"
   WriteRegStr HKCU "Software\Classes\${EXT}\OpenWithProgids" "${APP}" ""
@@ -131,6 +154,8 @@ Section "関連付け(現在のアカウント)"
   WriteRegStr HKCU "Software\Classes\${EXT2}" "" "${APP}"
   WriteRegStr HKCU "Software\Classes\${EXT2}" "Content Type" "${MIME}"
   WriteRegStr HKCU "Software\Classes\${EXT2}\OpenWithProgids" "${APP}" ""
+
+  WriteRegStr HKCU "Software\Classes\Applications\${APP}.exe\shell\open\command" "" '"$INSTDIR\${APP}.exe" "%1"'
 
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT}\UserChoice"
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\${EXT2}\UserChoice"
@@ -140,12 +165,16 @@ Section "関連付け(現在のアカウント)"
 SectionEnd
 
 Section "スタートメニュー(現在のアカウント)"
+  SectionIn 1 2
+
   CreateDirectory "$SMPROGRAMS\${TITLE}"
   CreateShortCut "$SMPROGRAMS\${TITLE}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\${TITLE}\起動.lnk" "$INSTDIR\${APP}.exe" "" "$INSTDIR\${APP}.exe" 0
 SectionEnd
 
 Section "起動"
+  SectionIn 1 2
+
   SetOutPath $INSTDIR
   Exec "$INSTDIR\jtifedit3.exe"
 SectionEnd
@@ -174,6 +203,8 @@ Section "Uninstall"
   ReadRegStr $0 HKLM "Software\Classes\${EXT2}" ""
   WriteRegStr   HKCU "Software\Classes\${EXT2}" "" "$0"
   ${EndIf}
+
+  DeleteRegKey HKCU "Software\Classes\Applications\${APP}.exe"
 
   ; Remove files and uninstaller
   Delete "$INSTDIR\1.ico"
