@@ -166,12 +166,6 @@ namespace jtifedit3 {
             if (fp != null) Openf(fp);
 
             tscRate.SelectedIndex = 0;
-
-            if (isX64 == false) {
-                tw = new Twain(new WinFormsWindowMessageHook(this));
-                tw.TransferImage += tw_ImageAvail;
-                tw.ScanningComplete += tw_EndingScan;
-            }
         }
 
         bool isX64 = IntPtr.Size == 8;
@@ -1614,11 +1608,16 @@ namespace jtifedit3 {
                 MBox.Show(this,messages.UseTwain32, Text, icon: MessageBoxIcon.Exclamation);
             }
             else {
+                if (!PrepareTwain()) {
+                    return;
+                }
+
                 tw.SelectSource();
+                tw = null;
             }
         }
 
-        Twain tw;
+        Twain tw = null;
 
         bool insertMode = false;
 
@@ -1627,6 +1626,10 @@ namespace jtifedit3 {
                 MBox.Show(this, messages.UseTwain32, Text, icon: MessageBoxIcon.Exclamation);
             }
             else {
+                if (!PrepareTwain()) {
+                    return;
+                }
+
                 tw.StartScanning(new ScanSettings {
                     ShowTwainUI = true,
                     ShowProgressIndicatorUI = true,
@@ -1635,6 +1638,18 @@ namespace jtifedit3 {
                     },
                 });
             }
+        }
+
+        private bool PrepareTwain() {
+            if (tw != null) {
+                return false;
+            }
+
+            tw = new Twain(new WinFormsWindowMessageHook(this));
+            tw.TransferImage += tw_ImageAvail;
+            tw.ScanningComplete += tw_EndingScan;
+
+            return true;
         }
 
         private void bScanInsert_Click(object sender, EventArgs e) {
@@ -1648,7 +1663,7 @@ namespace jtifedit3 {
         }
 
         void tw_EndingScan(object sender, ScanningCompleteEventArgs e) {
-
+            tw = null;
         }
 
         void tw_ImageAvail(object sender, TransferImageEventArgs e) {
