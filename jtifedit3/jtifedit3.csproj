@@ -129,6 +129,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>messages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Credit.cs" />
     <Compile Include="OpenWayForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +254,7 @@
     </Compile>
     <Compile Include="TIFCut.cs" />
     <Compile Include="TIFx.cs" />
+    <Compile Include="Utils\Credits.cs" />
     <Compile Include="Utils\MBox.cs" />
     <Compile Include="Utils\WIAScanner.cs" />
     <Compile Include="Utils\WinFormsWindowMessageHook.cs" />
@@ -286,9 +288,6 @@
     <None Include="Resources\Camera_13_16_16_32.png" />
     <Content Include="TwainDotNet.dll" />
     <Content Include="WIA.dll" />
-    <None Include="FreeImageNET.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="MAPISendMailSa.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
