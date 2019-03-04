@@ -1452,11 +1452,9 @@ namespace jtifedit3 {
                             FIBITMAP frm = tv.Picts[x].Picture;
                             uint bpp = FreeImage.GetBPP(frm);
                             FIBITMAP fib = FreeImage.Rescale(frm, p.npx, p.npy, FREE_IMAGE_FILTER.FILTER_BOX);
-                            if (bpp == 1) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE, true);
-                            if (bpp == 4) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP, true);
-                            if (bpp == 8) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP, true);
+                            FIBITMAP fibNew = RestoreBPP(ref fib, bpp);
                             uint dpi = (uint)p.dpi;
-                            tv.Picts[x].Picture = fib;
+                            tv.Picts[x].Picture = fibNew;
                             tv.Picts[x].SetDPI(dpi, dpi);
                             tv.Picts.ResetItem(x);
                         }
@@ -1506,10 +1504,8 @@ namespace jtifedit3 {
                         int npx = (int)((FreeImage.GetWidth(frm) * dpi) / rx);
                         int npy = (int)((FreeImage.GetHeight(frm) * dpi) / ry);
                         FIBITMAP fib = FreeImage.Rescale(frm, npx, npy, FREE_IMAGE_FILTER.FILTER_BOX);
-                        if (bpp == 1) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE, true);
-                        if (bpp == 4) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP, true);
-                        if (bpp == 8) fib = FreeImage.ConvertColorDepth(fib, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP, true);
-                        t.Picture = fib;
+                        FIBITMAP fibNew = RestoreBPP(ref fib, bpp);
+                        t.Picture = fibNew;
                         t.SetDPI(dpi, dpi);
                         tv.Picts.ResetItem(tv.Picts.IndexOf(t));
                     }
@@ -1605,7 +1601,7 @@ namespace jtifedit3 {
 
         private void bSelScanner_Click(object sender, EventArgs e) {
             if (isX64) {
-                MBox.Show(this,messages.UseTwain32, Text, icon: MessageBoxIcon.Exclamation);
+                MBox.Show(this, messages.UseTwain32, Text, icon: MessageBoxIcon.Exclamation);
             }
             else {
                 if (!PrepareTwain()) {
@@ -1692,28 +1688,7 @@ namespace jtifedit3 {
                                 FreeImage.Invert(dib3);
                                 FreeImage.UnloadEx(ref dib2);
                                 try {
-                                    FIBITMAP dibFin;
-                                    switch (FreeImage.GetBPP(dib)) {
-                                        case 1:
-                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE);
-                                            break;
-                                        case 4:
-                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP);
-                                            break;
-                                        case 8:
-                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP);
-                                            break;
-                                        case 15:
-                                        case 16:
-                                        case 24:
-                                        default:
-                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_24_BPP);
-                                            break;
-                                        case 32:
-                                            dibFin = FreeImage.ConvertColorDepth(dib3, FREE_IMAGE_COLOR_DEPTH.FICD_32_BPP);
-                                            break;
-                                    }
-                                    FreeImage.UnloadEx(ref dib3);
+                                    FIBITMAP dibFin = RestoreBPP(ref dib3, FreeImage.GetBPP(dib));
                                     tv.Picts[x].Picture = dibFin;
                                     tv.Picts.ResetItem(x);
                                 }
@@ -1729,6 +1704,34 @@ namespace jtifedit3 {
                 }
                 break;
             }
+        }
+
+        private FIBITMAP RestoreBPP(ref FIBITMAP dibReleaseAfterConversion, uint bpp) {
+            FIBITMAP dibFin;
+            switch (bpp) {
+                case 1:
+                    dibFin = FreeImage.ConvertColorDepth(dibReleaseAfterConversion, FREE_IMAGE_COLOR_DEPTH.FICD_01_BPP | FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE);
+                    break;
+                case 4:
+                    dibFin = FreeImage.ConvertColorDepth(dibReleaseAfterConversion, FREE_IMAGE_COLOR_DEPTH.FICD_04_BPP);
+                    break;
+                case 8:
+                    dibFin = FreeImage.ConvertColorDepth(dibReleaseAfterConversion, FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP);
+                    break;
+                case 15:
+                case 16:
+                case 24:
+                default:
+                    dibFin = FreeImage.ConvertColorDepth(dibReleaseAfterConversion, FREE_IMAGE_COLOR_DEPTH.FICD_24_BPP);
+                    break;
+                case 32:
+                    dibFin = FreeImage.ConvertColorDepth(dibReleaseAfterConversion, FREE_IMAGE_COLOR_DEPTH.FICD_32_BPP);
+                    break;
+            }
+            if (dibReleaseAfterConversion == dibFin) {
+                dibReleaseAfterConversion.SetNull();
+            }
+            return dibFin;
         }
 
         private void bWriteText_Click(object sender, EventArgs e) {
