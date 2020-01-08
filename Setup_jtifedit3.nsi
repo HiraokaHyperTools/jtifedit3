@@ -50,9 +50,6 @@ AutoCloseWindow true
 
 AllowSkipFiles off
 
-!define DOTNET_VERSION "2.0"
-
-!include "DotNET.nsh"
 !include LogicLib.nsh
 
 ;--------------------------------
@@ -105,8 +102,6 @@ Section "${APP}" ;No components page, name is not important
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
-
-  !insertmacro CheckDotNET ${DOTNET_VERSION}
 
   ; Put file there
 
