@@ -74,7 +74,6 @@ namespace jtifedit3 {
             this.bFillPic = new System.Windows.Forms.ToolStripButton();
             this.bWriteImage = new System.Windows.Forms.ToolStripSplitButton();
             this.bWriteImageNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.bPrint = new System.Windows.Forms.ToolStripButton();
             this.bPageSetting = new System.Windows.Forms.ToolStripButton();
             this.bScan = new System.Windows.Forms.ToolStripDropDownButton();
             this.bSelScanner = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,6 +114,10 @@ namespace jtifedit3 {
             this.pDocGo = new System.Drawing.Printing.PrintDocument();
             this.ofdImport = new System.Windows.Forms.OpenFileDialog();
             this.scannerList = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.bPrint = new System.Windows.Forms.ToolStripDropDownButton();
+            this.bPrintAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.bPrintSelected = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -687,16 +690,6 @@ namespace jtifedit3 {
             this.bWriteImageNew.Text = "画像を選択して貼り付け";
             this.bWriteImageNew.Click += new System.EventHandler(this.bWriteImageNew_Click);
             // 
-            // bPrint
-            // 
-            this.bPrint.Image = global::jtifedit3.Properties.Resources.PrintHS;
-            this.bPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.bPrint.Name = "bPrint";
-            this.bPrint.Size = new System.Drawing.Size(35, 35);
-            this.bPrint.Text = "印刷";
-            this.bPrint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.bPrint.Click += new System.EventHandler(this.bPrint_Click);
-            // 
             // bPageSetting
             // 
             this.bPageSetting.Image = global::jtifedit3.Properties.Resources.PrintSetupHS;
@@ -1026,6 +1019,38 @@ namespace jtifedit3 {
             this.scannerList.Name = "scannerList";
             this.scannerList.Size = new System.Drawing.Size(61, 4);
             // 
+            // bPrint
+            // 
+            this.bPrint.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bPrintAll,
+            this.toolStripSeparator18,
+            this.bPrintSelected});
+            this.bPrint.Image = global::jtifedit3.Properties.Resources.PrintHS;
+            this.bPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bPrint.Name = "bPrint";
+            this.bPrint.Size = new System.Drawing.Size(44, 35);
+            this.bPrint.Text = "印刷";
+            this.bPrint.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // bPrintAll
+            // 
+            this.bPrintAll.Name = "bPrintAll";
+            this.bPrintAll.Size = new System.Drawing.Size(180, 22);
+            this.bPrintAll.Text = "すべて印刷";
+            this.bPrintAll.Click += new System.EventHandler(this.bPrint_Click);
+            // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(177, 6);
+            // 
+            // bPrintSelected
+            // 
+            this.bPrintSelected.Name = "bPrintSelected";
+            this.bPrintSelected.Size = new System.Drawing.Size(180, 22);
+            this.bPrintSelected.Text = "選択ページを印刷";
+            this.bPrintSelected.Click += new System.EventHandler(this.bPrint_Click);
+            // 
             // JForm
             // 
             this.AllowDrop = true;
@@ -1109,7 +1134,6 @@ namespace jtifedit3 {
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lExifCutWhat;
         private System.Windows.Forms.Button bHideExifCut;
-        private System.Windows.Forms.ToolStripButton bPrint;
         private System.Windows.Forms.PrintDialog pGo;
         private System.Drawing.Printing.PrintDocument pDocGo;
         private System.Windows.Forms.ToolStripButton bPageSetting;
@@ -1153,6 +1177,10 @@ namespace jtifedit3 {
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ToolStripMenuItem bInsertWia;
         private System.Windows.Forms.ToolStripMenuItem bAppendWia;
+        private System.Windows.Forms.ToolStripDropDownButton bPrint;
+        private System.Windows.Forms.ToolStripMenuItem bPrintAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+        private System.Windows.Forms.ToolStripMenuItem bPrintSelected;
     }
 }
 

@@ -289,6 +289,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Camera_13_16_16_32.png" />
+    <Content Include="FreeImageNET.dll" />
     <Content Include="TwainDotNet.dll" />
     <Content Include="WIA.dll" />
     <Content Include="MAPISendMailSa.exe">

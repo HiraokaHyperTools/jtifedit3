@@ -10,8 +10,8 @@ Unicode true
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
 
-!system 'DefineAsmVer.exe jtifedit3\bin\release\jtifedit3.exe "!define VER ""[SVER]"" " > Tmpver.nsh'
-!include "Tmpver.nsh"
+!system 'DefineAsmVer.exe jtifedit3\bin\release\jtifedit3.exe "!define VER ""[SFVER]"" " > Appver.tmp'
+!include "Appver.tmp"
 
 !searchreplace APV ${VER} "." "_"
 

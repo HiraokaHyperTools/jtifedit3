@@ -1321,14 +1321,23 @@ namespace jtifedit3 {
                 }
             }
 
-            pGo.PrinterSettings.FromPage = 1 + tv.SelFirst;
-            pGo.PrinterSettings.ToPage = 1 + tv.SelLast;
             pGo.PrinterSettings.MinimumPage = 1;
             pGo.PrinterSettings.MaximumPage = tv.Picts.Count;
-            pGo.PrinterSettings.PrintRange = System.Drawing.Printing.PrintRange.SomePages;
 
-            if (pGo.PrinterSettings.FromPage < 1)
+            if (ReferenceEquals(sender, bPrintAll)) {
+                pGo.PrinterSettings.FromPage = pGo.PrinterSettings.MinimumPage;
+                pGo.PrinterSettings.ToPage = pGo.PrinterSettings.MaximumPage;
+                pGo.PrinterSettings.PrintRange = System.Drawing.Printing.PrintRange.AllPages;
+            }
+            else {
+                pGo.PrinterSettings.FromPage = 1 + tv.SelFirst;
+                pGo.PrinterSettings.ToPage = 1 + tv.SelLast;
+                pGo.PrinterSettings.PrintRange = System.Drawing.Printing.PrintRange.SomePages;
+            }
+
+            if (pGo.PrinterSettings.FromPage < 1 || tv.Picts.Count < 1) {
                 return;
+            }
 
             if (pGo.ShowDialog(this) != DialogResult.OK)
                 return;
