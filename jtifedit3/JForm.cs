@@ -843,7 +843,7 @@ namespace jtifedit3 {
         private bool Savef(String fp) {
             if (fp == null || ReadOnly || (0 != (File.GetAttributes(fp) & FileAttributes.ReadOnly))) {
                 sfdPict.FileName = Currentfp;
-                _Retry:
+            _Retry:
                 if (sfdPict.ShowDialog(this) != DialogResult.OK)
                     return false;
                 if (File.Exists(sfdPict.FileName) && 0 != (File.GetAttributes(sfdPict.FileName) & FileAttributes.ReadOnly)) {
@@ -1190,7 +1190,7 @@ namespace jtifedit3 {
                             default:
                                 return;
                         }
-                        _Break:;
+                    _Break:;
                         break;
                     }
                 }
@@ -1277,6 +1277,36 @@ namespace jtifedit3 {
                 }
 
                 return new PaperSize("A4", 827, 1169);
+            }
+
+            internal static PaperSize FindOrGuess(
+                Bitmap pic,
+                PrinterSettings.PaperSizeCollection paperSizes
+            ) {
+                float xDPI = pic.HorizontalResolution;
+                float yDPI = pic.VerticalResolution;
+                int cx = pic.Width;
+                int cy = pic.Height;
+
+                int a = (int)(cx / xDPI * 100);
+                int b = (int)(cy / yDPI * 100);
+
+                var width = Math.Min(a, b);
+                var height = Math.Max(a, b);
+
+                var wDiff = width * 0.01;
+                var hDiff = height * 0.01;
+
+                foreach (PaperSize paperSize in paperSizes) {
+                    if (true
+                        && Math.Abs(paperSize.Width - width) < wDiff
+                        && Math.Abs(paperSize.Height - height) < hDiff
+                    ) {
+                        return paperSize;
+                    }
+                }
+
+                return Guess(pic);
             }
         }
 
@@ -1402,7 +1432,7 @@ namespace jtifedit3 {
 
             e.PageSettings.Margins = Settings.Default.PrintMargins; // new Margins(20, 20, 20, 20); // 5mm
             e.PageSettings.PaperSize = Settings.Default.PrintPaper == PaperKind.Custom
-                ? PUt.Guess(picFrm) // 混載
+                ? PUt.FindOrGuess(picFrm, e.PageSettings.PrinterSettings.PaperSizes) // 混載
                 : PUt3.Find(e.PageSettings.PrinterSettings.PaperSizes, Settings.Default.PrintPaper); // 統一サイズ
             e.PageSettings.Landscape = false; // 常に縦
         }

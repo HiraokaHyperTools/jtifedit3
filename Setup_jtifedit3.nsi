@@ -9,8 +9,10 @@ Unicode true
 
 !define APP   "jtifedit3"
 !define TITLE "J TIFF Editor 3"
+!define BINDIR64 "jtifedit3\bin\release"
+!define BINDIR32 "jtifedit3\bin\x86\release"
 
-!system 'DefineAsmVer.exe jtifedit3\bin\release\jtifedit3.exe "!define VER ""[SFVER]"" " > Appver.tmp'
+!system 'DefineAsmVer.exe ${BINDIR64}\jtifedit3.exe "!define VER ""[SFVER]"" " > Appver.tmp'
 !include "Appver.tmp"
 
 !searchreplace APV ${VER} "." "_"
@@ -20,10 +22,7 @@ Unicode true
 !define EXT ".tif"
 !define EXT2 ".tiff"
 
-; bin\release
-; bin\x86\release
-
-!system 'MySign "jtifedit3\bin\release\jtifedit3.exe" "jtifedit3\bin\x86\release\jtifedit3.exe"'
+!system 'MySign "${BINDIR32}\jtifedit3.exe" "${BINDIR64}\jtifedit3.exe"'
 !finalize 'MySign "%1"'
 
 XPStyle on
@@ -120,20 +119,20 @@ Section "${APP}" ;No components page, name is not important
   
 SectionEnd ; end the section
 
-Section "32 ビット版"
+Section /o "32 ビット版"
   SectionIn 1
 
   Delete "$INSTDIR\FreeImage.dll"
   
-  File /r /x "*.vshost.*" /x "*.xml" "jtifedit3\bin\x86\release\*.*"
+  File /r /x "*.vshost.*" /x "*.xml" "${BINDIR32}\*.*"
 SectionEnd
 
-Section /o "Any CPU 版 (64 or 32 ビット自動)"
+Section "Any CPU 版 (64 or 32 ビット自動)"
   SectionIn 2
 
   Delete "$INSTDIR\FreeImage.dll"
   
-  File /r /x "*.vshost.*" /x "*.xml" "jtifedit3\bin\release\*.*"
+  File /r /x "*.vshost.*" /x "*.xml" "${BINDIR64}\*.*"
 SectionEnd
 
 Section "関連付け(現在のアカウント)"
